@@ -4,9 +4,7 @@
 template<typename T>
 class LGraph : public Graph<T> {
 public:
-	LGraph(int nVertexes) {
-		this->nVertexes_ = nVertexes;
-		this->nEdges_ = 0;
+	LGraph(int nVertexes) : Graph<T>(nVertexes) {	
 		list_ = new vector<AdjNode<T>>[nVertexes];
 	}
 	~LGraph() {

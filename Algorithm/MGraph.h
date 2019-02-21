@@ -4,9 +4,7 @@
 template<typename T>
 class MGraph : public Graph<T> {
 public:
-	MGraph(int nVertexes) {
-		this->nVertexes_ = nVertexes;
-		this->nEdges_ = 0;
+	MGraph(int nVertexes) : Graph<T>(nVertexes) {		
 		matrix_ = new T*[nVertexes];
 		for (int i = 0; i < nVertexes; i++) {
 			matrix_[i] = new T[nVertexes];
@@ -29,14 +27,14 @@ public:
 		iter_v = v;
 		for (iter_w = 0; iter_w < this->nVertexes_; iter_w++)
 			if (matrix_[iter_v][iter_w] != NO_VALUE)
-				return AdjNode<T>(iter_w, matrix_[iter_v][iter_w++]);
+				return AdjNode<T>(iter_w, matrix_[iter_v][iter_w]);
 		return AdjNode<T>(NO_VALUE, NO_VALUE);
 	}
 	
 	virtual AdjNode<T> adj_iter_next() {
-		for (; iter_w < this->nVertexes_; iter_w++)
+		for (iter_w++; iter_w < this->nVertexes_; iter_w++)
 			if (matrix_[iter_v][iter_w] != NO_VALUE)
-				return AdjNode<T>(iter_w, matrix_[iter_v][iter_w++]);
+				return AdjNode<T>(iter_w, matrix_[iter_v][iter_w]);
 		return AdjNode<T>(NO_VALUE, NO_VALUE);
 	}
 

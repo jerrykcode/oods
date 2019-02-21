@@ -47,10 +47,10 @@ public:
 	int getVertexesNum() { return nVertexes_; }
 	int getEdgesNum() { return nEdges_; }
 	
-	virtual void insertEdge(Edge<T> edge) {}
-	virtual AdjNode<T> adj_iter_begin(Vertex v) { return AdjNode<T>(NO_VALUE, NO_VALUE); }
-	virtual AdjNode<T> adj_iter_next() { return AdjNode<T>(NO_VALUE, NO_VALUE); }
-	virtual void clear() {}
+	virtual void insertEdge(Edge<T> edge) = 0;
+	virtual AdjNode<T> adj_iter_begin(Vertex v) = 0;
+	virtual AdjNode<T> adj_iter_next() = 0;
+	virtual void clear() = 0;
 protected:
 	int nVertexes_;
 	int nEdges_;

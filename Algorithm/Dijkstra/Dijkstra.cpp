@@ -11,7 +11,7 @@ Dijkstra<T>::~Dijkstra() {
 }
 
 template<typename T>
-typename T Dijkstra<T>::shortestPath(Graph<T> *pGraph, Vertex src, Vertex des, vector<Vertex>& path) {
+T Dijkstra<T>::shortestPath(Graph<T> *pGraph, Vertex src, Vertex des, vector<Vertex>& path) {
 	int nVertexes = pGraph->getVertexesNum();
 	if (nVertexes <= 0) return NO_VALUE;
 	if (pGraph->getEdgesNum() == 0) return NO_VALUE;
