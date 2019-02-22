@@ -1,3 +1,4 @@
+#pragma once
 #include "LGraph.h"
 #include "MGraph.h"
 
