@@ -47,6 +47,10 @@ T Dijkstra<T>::shortestPath(Graph<T> *pGraph, Vertex src, Vertex des, vector<Ver
 			}
 		}
 	}
+	if (minVertex != des) {
+		deleteMemory();
+		return NO_VALUE;
+	}
 	getPath(src, des, path);
 	deleteMemory();
 	return minDist;

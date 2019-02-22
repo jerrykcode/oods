@@ -11,7 +11,10 @@ int main() {
 	int mstWeight;
 	Graph<WeightType> *pMstGraph = NULL;
 	prim.getMST(pGraph, &mstWeight, &pMstGraph);
-	cout << "The weight of the MST:" << mstWeight << endl;
+	if (mstWeight)
+		cout << "The weight of the MST:" << mstWeight << endl;
+	else
+		cout << "Graph not connected!" << endl;
 	pGraph->clear();
 	pMstGraph->clear();
 	return 0;
