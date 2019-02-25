@@ -8,13 +8,18 @@ public:
 	GraphInitializer() {}
 	~GraphInitializer() {}
 	
-	Graph<T> * createGraph(int nVertexes, vector<Edge<T>>& edges) {
+	Graph<T> * createGraph(int nVertexes, bool isDirected, vector<Edge<T>>& edges) {
 		Graph<T> *pGraph;
-		if (edges.size() >= nVertexes * (nVertexes / 4)) {
-			pGraph = (Graph<T> *)(new MGraph<T>(nVertexes));
+		int nEdges;
+		if (isDirected)
+			nEdges = edges.size();
+		else
+			nEdges = edges.size() * 2;
+		if (nEdges >= nVertexes * (nVertexes / 2)) {
+			pGraph = (Graph<T> *)(new MGraph<T>(nVertexes, isDirected));
 		}
 		else {
-			pGraph = (Graph<T> *)(new LGraph<T>(nVertexes));
+			pGraph = (Graph<T> *)(new LGraph<T>(nVertexes, isDirected));
 		}
 		for (Edge<T> edge : edges) {
 			pGraph->insertEdge(edge);			

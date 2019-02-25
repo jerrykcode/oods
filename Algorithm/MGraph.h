@@ -4,7 +4,7 @@
 template<typename T>
 class MGraph : public Graph<T> {
 public:
-	MGraph(int nVertexes) : Graph<T>(nVertexes) {		
+	MGraph(int nVertexes, bool isDirected) : Graph<T>(nVertexes, isDirected) {		
 		matrix_ = new T*[nVertexes];
 		for (int i = 0; i < nVertexes; i++) {
 			matrix_[i] = new T[nVertexes];
@@ -19,8 +19,12 @@ public:
 		Vertex v, w;
 		edge.getVertexes(&v, &w);
 		T weight = edge.getWeight();
-		matrix_[v][w] = matrix_[w][v] = weight;
-		this->nEdges_ ++;
+		matrix_[v][w] = weight;
+		this->nEdges_++;
+		if (!this->isDirected_) {
+			matrix_[w][v] = weight;
+			this->nEdges_++;
+		}
 	}
 	
 	virtual AdjNode<T> adj_iter_begin(Vertex v) {

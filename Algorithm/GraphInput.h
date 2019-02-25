@@ -8,7 +8,21 @@ public:
 	~GraphInput() {}
 
 	Graph<T> *createGraphByInput() {
+		bool isDirected;
 		int nVertexes, nEdges;
+		while (true) {
+			cout << "Is the graph directed ? [Y/N]" << endl;
+			string cmd;
+			cin >> cmd;
+			if (cmd == "Y" || cmd == "y") {
+				isDirected = true;
+				break;
+			}
+			else if (cmd == "N" || cmd == "n") {
+				isDirected = false;
+				break;
+			}
+		}
 		cout << "Enter the number of vertexes: " << endl;
 		cin >> nVertexes;
 		cout << "Enter the number of edges: " << endl;
@@ -33,7 +47,7 @@ public:
 			}
 			edges.push_back(Edge<T>(v, w, weight));
 		}
-		Graph<T> *pGraph = this->createGraph(nVertexes, edges);
+		Graph<T> *pGraph = this->createGraph(nVertexes, isDirected, edges);
 		edges.clear();
 		vector<Edge<T>>().swap(edges);
 		return pGraph;

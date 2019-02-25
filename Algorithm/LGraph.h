@@ -4,7 +4,7 @@
 template<typename T>
 class LGraph : public Graph<T> {
 public:
-	LGraph(int nVertexes) : Graph<T>(nVertexes) {	
+	LGraph(int nVertexes, bool isDirected) : Graph<T>(nVertexes, isDirected) {	
 		list_ = new vector<AdjNode<T>>[nVertexes];
 	}
 	~LGraph() {
@@ -16,8 +16,11 @@ public:
 		edge.getVertexes(&v, &w);
 		T weight = edge.getWeight();
 		list_[v].push_back(AdjNode<T>(w, weight));
-		list_[w].push_back(AdjNode<T>(v, weight));
 		this->nEdges_++;
+		if (!this->isDirected_) {
+			list_[w].push_back(AdjNode<T>(v, weight));
+			this->nEdges_++;
+		}
 	}
 
 	virtual AdjNode<T> adj_iter_begin(Vertex v) {

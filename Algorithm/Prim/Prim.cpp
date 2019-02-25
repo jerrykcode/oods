@@ -70,7 +70,7 @@ void Prim<T>::getMST(Graph<T>* pGraph, T * pMstWeight, Graph<T>** ppMstGraph) {
 	vector<Edge<T>> mstEdgeSet;
 	getMST(pGraph, pMstWeight, mstEdgeSet);
 	GraphInitializer<T> graphInit;
-	*ppMstGraph = graphInit.createGraph(pGraph->getVertexesNum(), mstEdgeSet);
+	*ppMstGraph = graphInit.createGraph(pGraph->getVertexesNum(), pGraph->isGraphDirected(), mstEdgeSet);
 	mstEdgeSet.clear();
 	vector<Edge<T>>().swap(mstEdgeSet);
 }

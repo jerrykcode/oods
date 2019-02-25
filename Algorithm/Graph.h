@@ -41,12 +41,13 @@ template<typename T>
 class Graph {
 public:
 	Graph() {}
-	Graph(int nVertexes) : nVertexes_(nVertexes), nEdges_(0) {}
+	Graph(int nVertexes, bool isDirected) : nVertexes_(nVertexes), nEdges_(0), isDirected_(isDirected) {}
 	~Graph() {}
 
 	int getVertexesNum() { return nVertexes_; }
 	int getEdgesNum() { return nEdges_; }
-	
+	bool isGraphDirected() { return isDirected_; }
+
 	virtual void insertEdge(Edge<T> edge) = 0;
 	virtual AdjNode<T> adj_iter_begin(Vertex v) = 0;
 	virtual AdjNode<T> adj_iter_next() = 0;
@@ -54,6 +55,7 @@ public:
 protected:
 	int nVertexes_;
 	int nEdges_;
+	bool isDirected_;
 };
 
 
