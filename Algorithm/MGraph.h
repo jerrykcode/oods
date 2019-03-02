@@ -27,6 +27,14 @@ public:
 		}
 	}
 	
+	virtual T getEdgeWeight(Vertex v, Vertex w) {
+		return matrix_[v][w];
+	}
+
+	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight) {
+		matrix_[v][w] += weight;
+	}
+
 	virtual AdjNode<T> adj_iter_begin(Vertex v) {
 		iter_v = v;
 		for (iter_w = 0; iter_w < this->nVertexes_; iter_w++)

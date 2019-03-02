@@ -23,6 +23,22 @@ public:
 		}
 	}
 
+	virtual T getEdgeWeight(Vertex v, Vertex w) {
+		for (auto it = list_[v].begin(); it != list_[v].end(); it++)
+			if (it->getAdjVertex() == w) {
+				return it->getAdjWeight();
+			}
+		return NO_VALUE;
+	}
+
+	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight) {
+		for (auto it = list_[v].begin(); it != list_[v].end(); it++) 
+			if (it->getAdjVertex() == w) {
+				it->increaseAdjWeight(weight);
+				break;
+			}
+	}
+
 	virtual AdjNode<T> adj_iter_begin(Vertex v) {
 		if (list_[v].size() == 0) return AdjNode<T>(NO_VALUE, NO_VALUE);
 		iter_count = 0;

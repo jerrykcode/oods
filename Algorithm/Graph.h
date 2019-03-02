@@ -32,6 +32,7 @@ public:
 
 	Vertex getAdjVertex() { return adjVertex; }
 	T getAdjWeight() { return adjWeight; }
+	void increaseAdjWeight(T weight) { adjWeight += weight; }
 private:
 	Vertex adjVertex;
 	T adjWeight;
@@ -49,6 +50,8 @@ public:
 	bool isGraphDirected() { return isDirected_; }
 
 	virtual void insertEdge(Edge<T> edge) = 0;
+	virtual T getEdgeWeight(Vertex v, Vertex w) = 0;
+	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight) = 0;
 	virtual AdjNode<T> adj_iter_begin(Vertex v) = 0;
 	virtual AdjNode<T> adj_iter_next() = 0;
 	virtual void clear() = 0;
