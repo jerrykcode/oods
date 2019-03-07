@@ -1,12 +1,11 @@
 #include "GraphInput.h"
 #include "Dijkstra.h"
-#include "Dijkstra.cpp"
 
 typedef int WeightType;
 
 int main() {
 	GraphInput<WeightType> graphInput;
-	Graph<WeightType> *pGraph =	graphInput.createGraphByInput();
+	Graph *pGraph =	graphInput.createGraphByInput();
 	Dijkstra<WeightType> dijkstra;
 	Vertex src, des;
 	cout << "Enter the src: " << endl;

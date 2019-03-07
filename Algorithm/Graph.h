@@ -8,57 +8,160 @@ using namespace std;
 
 typedef int Vertex;
 
-template<typename T>
+//Define edge
 class Edge {
 public:
 	Edge() {}
-	Edge(Vertex v, Vertex w, T weight) : v(v), w(w), weight(weight) {}
+	Edge(Vertex v, Vertex w) : v(v), w(w) {}
 	~Edge() {}
-	void getVertexes(Vertex *pV, Vertex *pW) {
-		*pV = v;
-		*pW = w;
-	}
-	T getWeight() { return weight; }
-private:
+
+	virtual void getVertexes(Vertex *pv, Vertex *pw) = 0;
+	virtual bool isWeighted() = 0;
+
+protected:
 	Vertex v, w;
-	T weight;
+};
+
+class UNWEdge : public Edge { //UnWeighted edge
+public:
+	UNWEdge(Vertex v, Vertex w) : Edge(v, w) {}
+
+	virtual void getVertexes(Vertex *pv, Vertex *pw) {
+		*pv = this->v;
+		*pw = this->w;
+	}
+
+	virtual bool isWeighted() {
+		return false;
+	}
 };
 
 template<typename T>
+class WEdge : public Edge { //Weighted edge
+public:
+	WEdge(Vertex v, Vertex w, T weight) : Edge(v, w), weight_(weight) {}
+
+	virtual void getVertexes(Vertex *pv, Vertex *pw) {
+		*pv = this->v;
+		*pw = this->w;
+	}
+
+	virtual bool isWeighted() {
+		return true;
+	}
+
+	T getWeight() {
+		return weight_;
+	}
+private:
+	T weight_;
+};
+
+//Define adjacent note
 class AdjNode {
 public:
-	AdjNode(Vertex adjVertex, T adjWeight) : adjVertex(adjVertex), adjWeight(adjWeight)	 {}
+	AdjNode() {}
+	AdjNode(Vertex adjVertex) : adjVertex_(adjVertex) {}
 	~AdjNode() {}
 
-	Vertex getAdjVertex() { return adjVertex; }
-	T getAdjWeight() { return adjWeight; }
-	void increaseAdjWeight(T weight) { adjWeight += weight; }
-private:
-	Vertex adjVertex;
-	T adjWeight;
+	virtual Vertex getAdjVertex() = 0;
+	virtual bool isWeighted() = 0;
+
+protected:
+	Vertex adjVertex_;
+};
+
+class UNWAdjNode : public AdjNode { //UnWeighted adjacent note
+public:
+	UNWAdjNode(Vertex adjVertex) : AdjNode(adjVertex) {}
+
+	virtual Vertex getAdjVertex() {
+		return this->adjVertex_;
+	}
+
+	virtual bool isWeighted() {
+		return false;
+	}
 };
 
 template<typename T>
+class WAdjNode : public AdjNode { //Weighted adjacent node
+public:
+	WAdjNode(Vertex adjVertex, T adjWeight) : AdjNode(adjVertex), adjWeight_(adjWeight) {}
+
+	virtual Vertex getAdjVertex() {
+		return this->adjVertex_;
+	}
+
+	virtual bool isWeighted() {
+		return true;
+	}
+
+	T getAdjWeight() {
+		return adjWeight_;
+	}
+
+	void increaseAdjWeight(T weight) {
+		adjWeight_ += weight;
+	}
+
+private:
+	T adjWeight_;
+};
+
+
+//Define Graph
 class Graph {
 public:
 	Graph() {}
-	Graph(int nVertexes, bool isDirected) : nVertexes_(nVertexes), nEdges_(0), isDirected_(isDirected) {}
+	Graph(int nVertexes, int nEdges, bool isDirected) : nVertexes_(nVertexes), nEdges_(nEdges), isDirected_(isDirected) {}
 	~Graph() {}
 
 	int getVertexesNum() { return nVertexes_; }
 	int getEdgesNum() { return nEdges_; }
-	bool isGraphDirected() { return isDirected_; }
 
-	virtual void insertEdge(Edge<T> edge) = 0;
-	virtual T getEdgeWeight(Vertex v, Vertex w) = 0;
-	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight) = 0;
-	virtual AdjNode<T> adj_iter_begin(Vertex v) = 0;
-	virtual AdjNode<T> adj_iter_next() = 0;
+	bool isDirected() { return isDirected_; }
+
+	virtual void insertEdge(Edge *pEdge) = 0;
+	virtual AdjNode * adj_iter_begin(Vertex v) = 0;
+	virtual AdjNode * adj_iter_next() = 0;
+	virtual void adj_iter_clear() = 0;
 	virtual void clear() = 0;
+	virtual bool isWeighted() = 0;
+
 protected:
 	int nVertexes_;
 	int nEdges_;
 	bool isDirected_;
 };
+
+class UNWGraph : public Graph { //UnWeighted Graph
+public:
+	UNWGraph(int nVertexes, int nEdges, bool isDirected) : Graph(nVertexes, nEdges, isDirected) {}
+
+	virtual void insertEdge(Edge *pEdge) = 0;
+	virtual AdjNode * adj_iter_begin(Vertex v) = 0;
+	virtual AdjNode * adj_iter_next() = 0;
+	virtual void adj_iter_clear() = 0;
+	virtual void clear() = 0;
+	virtual bool isWeighted() = 0;
+};
+
+template<typename T>
+class WGraph : public Graph { //Weighted Graph
+public:
+	WGraph(int nVertexes, int nEdges, bool isDirected) : Graph(nVertexes, nEdges, isDirected) {}
+
+	virtual void insertEdge(Edge *pEdge) = 0;
+	virtual AdjNode * adj_iter_begin(Vertex v) = 0;
+	virtual AdjNode * adj_iter_next() = 0;
+	virtual void adj_iter_clear() = 0;
+	virtual void clear() = 0;
+	virtual bool isWeighted() = 0;
+
+	virtual T getEdgeWeight(Vertex v, Vertex w) = 0;
+	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight) = 0;
+};
+
 
 

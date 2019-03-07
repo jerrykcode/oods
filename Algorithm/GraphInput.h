@@ -7,8 +7,8 @@ public:
 	GraphInput() : GraphInitializer<T>() {}
 	~GraphInput() {}
 
-	Graph<T> *createGraphByInput() {
-		bool isDirected;
+	Graph *createGraphByInput() {
+		bool isDirected, isWeighted;
 		int nVertexes, nEdges;
 		while (true) {
 			cout << "Is the graph directed ? [Y/N]" << endl;
@@ -23,11 +23,24 @@ public:
 				break;
 			}
 		}
+		while (true) {
+			cout << "Is the graph weighted ? [Y/N]" << endl;
+			string cmd;
+			cin >> cmd;
+			if (cmd == "Y" || cmd == "y") {
+				isWeighted = true;
+				break;
+			}
+			else if (cmd == "N" || cmd == "n") {
+				isWeighted = false;
+				break;
+			}
+		}
 		cout << "Enter the number of vertexes: " << endl;
 		cin >> nVertexes;
 		cout << "Enter the number of edges: " << endl;
 		cin >> nEdges;
-		vector<Edge<T>> edges;
+		vector<Edge *> edges;
 		for (int i = 0; i < nEdges; i++) {
 			cout << "Eneter the 2 vertexes of the " << i << "th edge: (The vertexes numbered from 0 to " << nVertexes - 1 << ")" << endl;
 			Vertex v, w;
@@ -37,19 +50,29 @@ public:
 				i--;
 				continue;
 			}
-			cout << "Enter the weight of the edge: " << endl;
-			T weight;
-			cin >> weight;
-			if (weight <= 0) {
-				cout << "Input Error: the weight of the edge should be positive. Please input again" << endl;
-				i--;
-				continue;
+			if (isWeighted) {
+				cout << "Enter the weight of the edge: " << endl;
+				T weight;
+				cin >> weight;
+				if (weight <= 0) {
+					cout << "Input Error: the weight of the edge should be positive. Please input again" << endl;
+					i--;
+					continue;
+				}
+				edges.push_back((Edge *)(new WEdge<T>(v, w, weight)));
 			}
-			edges.push_back(Edge<T>(v, w, weight));
+			else {
+				edges.push_back((Edge *)(new UNWEdge(v, w)));
+			}
 		}
-		Graph<T> *pGraph = this->createGraph(nVertexes, isDirected, edges);
+		Graph *pGraph = this->createGraph(nVertexes, isDirected, isWeighted, edges);
+		for (auto it = edges.begin(); it != edges.end(); it++)
+			if (*it != NULL) {
+				delete (*it);
+				*it = NULL;
+			}
 		edges.clear();
-		vector<Edge<T>>().swap(edges);
+		vector<Edge *>().swap(edges);
 		return pGraph;
 	}
 };
