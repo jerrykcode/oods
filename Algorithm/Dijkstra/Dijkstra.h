@@ -21,6 +21,8 @@ private:
 	bool dijkstra(Graph *pGraph, Vertex src, Vertex des);
 	void findMin(Vertex *pMinVertex, T *pMinDist, int nVertexes);
 	void getPath(Vertex src, Vertex des, vector<Vertex>& path);
+
+	bool memory_alloced_;
 };
 
 
@@ -42,8 +44,10 @@ T Dijkstra<T>::shortestPath(Graph *pGraph, Vertex src, Vertex des, vector<Vertex
 		getPath(src, des, path);
 	}
 	else result = NO_VALUE;
-	free(dist_);
-	free(path_);
+	if (memory_alloced_) {
+		free(dist_);
+		free(path_);
+	}
 	return result;
 }
 
@@ -58,12 +62,15 @@ void Dijkstra<T>::shortestPath(Graph *pGraph, Vertex src, T * dists, vector<Vert
 	else {
 		fill(dists, dists + pGraph->getVertexesNum(), NO_VALUE);
 	}
-	free(dist_);
-	free(path_);
+	if (memory_alloced_) {
+		free(dist_);
+		free(path_);
+	}
 }
 
 template<typename T>
 bool Dijkstra<T>::dijkstra(Graph *pGraph, Vertex src, Vertex des) {
+	memory_alloced_ = false;
 	if (!pGraph->isWeighted()) return false;
 	//Calculate shortest distance by Dijkstra
 	int nVertexes = pGraph->getVertexesNum();
@@ -76,6 +83,7 @@ bool Dijkstra<T>::dijkstra(Graph *pGraph, Vertex src, Vertex des) {
 	fill(path_, path_ + nVertexes, NO_VALUE);
 	collected_ = new bool[nVertexes];
 	fill(collected_, collected_ + nVertexes, false);
+	memory_alloced_ = true;
 	dist_[src] = 0;
 	collected_[src] = true;
 	for (AdjNode * pAdjNode = pGraph->adj_iter_begin(src); pAdjNode != NULL; pAdjNode = pGraph->adj_iter_next()) {
