@@ -103,6 +103,7 @@ inline bool Prim<T>::prim(Graph * pGraph, T * pMstWeight, vector<Edge*>& pMstEdg
 		//the weight of the edge bwtween src and it
 		Vertex adjVertex = pAdjNode->getAdjVertex();
 		T adjWeight = ((WAdjNode<T> *)pAdjNode)->getAdjWeight();
+		pGraph->adj_iter_clear();
 		if (adjWeight < 0) {
 			free(dist_);
 			free(pre_);
@@ -126,6 +127,7 @@ inline bool Prim<T>::prim(Graph * pGraph, T * pMstWeight, vector<Edge*>& pMstEdg
 			//For every vertex adjacent to minVertex
 			Vertex adjVertex = pAdjNode->getAdjVertex();
 			T adjWeight = ((WAdjNode<T> *)pAdjNode)->getAdjWeight();
+			pGraph->adj_iter_clear();
 			if (adjWeight < 0) {
 				goto CLEAR;
 			}

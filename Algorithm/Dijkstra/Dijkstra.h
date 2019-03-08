@@ -83,13 +83,14 @@ bool Dijkstra<T>::dijkstra(Graph *pGraph, Vertex src, Vertex des) {
 		//the weight of the edge between src and it
 		Vertex adjVertex = pAdjNode->getAdjVertex();
 		T adjWeight = ((WAdjNode<T> *)pAdjNode)->getAdjWeight();
+		pGraph->adj_iter_clear();
 		if (adjWeight < 0) {
 			free(collected_);
 			return false;
 			//Delete the memory of dist_, path_ in shortestPath function
 		}
 		dist_[adjVertex] = adjWeight;
-		path_[adjVertex] = src;
+		path_[adjVertex] = src;		
 	}
 	Vertex minVertex;
 	T minDist;
@@ -111,6 +112,7 @@ bool Dijkstra<T>::dijkstra(Graph *pGraph, Vertex src, Vertex des) {
 			//For every vertexes adjacent to minVertex
 			Vertex adjVertex = pAdjNode->getAdjVertex();
 			T adjWeight = ((WAdjNode<T> *)pAdjNode)->getAdjWeight();
+			pGraph->adj_iter_clear();
 			if (adjWeight < 0) {
 				free(collected_);
 				return false;
@@ -123,7 +125,7 @@ bool Dijkstra<T>::dijkstra(Graph *pGraph, Vertex src, Vertex des) {
 					dist_[adjVertex] = minDist + adjWeight;
 					path_[adjVertex] = minVertex;
 				}
-			}
+			}			
 		}
 	} //while
 	free(collected_);
