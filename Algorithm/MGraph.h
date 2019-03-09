@@ -4,6 +4,7 @@
 class MatrixUNWGraph : public UNWGraph {
 public:
 	MatrixUNWGraph(int nVertexes, int nEdges, bool isDirected);
+	MatrixUNWGraph(int nVertexes, int nEdges, bool isDirected, bool **matrix);
 	~MatrixUNWGraph();
 
 	virtual void insertEdge(Edge *pEdge);
@@ -12,6 +13,9 @@ public:
 	virtual void adj_iter_clear();
 	virtual void clear();
 	virtual bool isWeighted();
+
+	virtual Graph *cloneGraph();
+	virtual Graph *inverseGraph();
 
 private:
 
@@ -27,6 +31,10 @@ inline MatrixUNWGraph::MatrixUNWGraph(int nVertexes, int nEdges, bool isDirected
 		matrix_[i] = new bool[nVertexes];
 		fill(matrix_[i], matrix_[i] + nVertexes, false);
 	}
+}
+
+inline MatrixUNWGraph::MatrixUNWGraph(int nVertexes, int nEdges, bool isDirected, bool **matrix) : MatrixUNWGraph(nVertexes, nEdges, isDirected) {
+	matrix_ = matrix;
 }
 
 inline MatrixUNWGraph::~MatrixUNWGraph() {
@@ -78,10 +86,36 @@ inline bool MatrixUNWGraph::isWeighted() {
 	return false;
 }
 
+inline Graph * MatrixUNWGraph::cloneGraph() {	
+	bool **matrix = new bool*[nVertexes_];
+	for (int i = 0; i < nVertexes_; i++) {
+		matrix[i] = new bool[nVertexes_];
+		memcpy(matrix[i], matrix_[i], nVertexes_ * sizeof(bool));
+	}
+	return (Graph *)(new MatrixUNWGraph(nVertexes_, nEdges_, isDirected_, matrix));
+}
+
+inline Graph *MatrixUNWGraph::inverseGraph() {
+	if (isDirected_) {		
+		bool **matrix = new bool*[nVertexes_];
+		for (int i = 0; i < nVertexes_; i++) {
+			matrix[i] = new bool[nVertexes_];
+			for (int j = 0; j < nVertexes_; j++)
+				matrix[i][j] = matrix_[j][i];
+		}		
+		return (Graph *)(new MatrixUNWGraph(nVertexes_, nEdges_, isDirected_, matrix));
+	}
+	else return cloneGraph();
+}
+
+
+//
+
 template<typename T>
 class MatrixWGraph : public WGraph<T> {
 public:
 	MatrixWGraph(int nVertexes, int nEdges, bool isDirected);
+	MatrixWGraph(int nVertexes, int nEdges, bool isDirected, T **matrix);
 	~MatrixWGraph();
 
 	virtual void insertEdge(Edge *pEdge);
@@ -94,7 +128,12 @@ public:
 	virtual T getEdgeWeight(Vertex v, Vertex w);
 	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight);
 
+	virtual Graph *cloneGraph();
+	virtual Graph *inverseGraph();	
+
 private:
+
+	void setMatrix(T **matrix);
 
 	T **matrix_;
 	Vertex iter_v_;
@@ -109,6 +148,11 @@ inline MatrixWGraph<T>::MatrixWGraph(int nVertexes, int nEdges, bool isDirected)
 		matrix_[i] = new T[nVertexes];
 		fill(matrix_[i], matrix_[i] + nVertexes, NO_VALUE);
 	}
+}
+
+template<typename T>
+inline MatrixWGraph<T>::MatrixWGraph(int nVertexes, int nEdges, bool isDirected, T **matrix) : MatrixWGraph<T>(nVertexes, nEdges, isDirected) {
+	matrix_ = matrix;
 }
 
 template<typename T>
@@ -187,4 +231,28 @@ inline void MatrixWGraph<T>::increaseEdgeWeight(Vertex v, Vertex w, T weight) {
 	if (!this->isDirected_) {
 		matrix_[w][v] += weight;
 	}
+}
+
+template<typename T>
+inline Graph * MatrixWGraph<T>::cloneGraph() {
+	T **matrix = new T*[this->nVertexes_];
+	for (int i = 0; i < this->nVertexes_; i++) {
+		matrix[i] = new T[this->nVertexes_];
+		memcpy(matrix[i], matrix_[i], this->nVertexes_ * sizeof(T));
+	}
+	return (Graph *)(new MatrixWGraph(this->nVertexes_, this->nEdges_, this->isDirected_, matrix));
+}
+
+template<typename T>
+inline Graph * MatrixWGraph<T>::inverseGraph() {
+	if (this->isDirected_) {
+		T **matrix = new T*[this->nVertexes_];
+		for (int i = 0; i < this->nVertexes_; i++) {
+			matrix[i] = new T[this->nVertexes_];
+			for (int j = 0; j < this->nVertexes_; j++)
+				matrix[i][j] = matrix_[j][i];
+		}
+		return (Graph *)(new MatrixWGraph<T>(this->nVertexes_, this->nEdges_, this->isDirected_, matrix));
+	}
+	else return cloneGraph();
 }

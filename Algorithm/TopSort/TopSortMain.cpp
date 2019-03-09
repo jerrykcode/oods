@@ -1,17 +1,15 @@
 #include "GraphInput.h"
 #include "TopSort.h"
-#include "TopSort.cpp"
 
 typedef int WeightType;
 
 int main() {
 	GraphInput<WeightType> graphInput;
-	Graph<WeightType> * pGraph = graphInput.createGraphByInput();
+	Graph * pGraph = graphInput.createGraphByInput();
 	TopSort<WeightType> topSort;
 	WeightType maxWeight;
-	vector<Edge<WeightType>> keyActivities;
-	topSort.top(pGraph, &maxWeight, keyActivities);
-	if (maxWeight == NO_VALUE) {
+	vector<WEdge<WeightType>> keyActivities;	
+	if (!topSort.top(pGraph, &maxWeight, keyActivities)) {
 		cout << "It is impossible to finish the task" << endl;
 	}
 	else {
@@ -25,7 +23,7 @@ int main() {
 			cout << v << " -> " << w << ". Weight of this edge is " << weight << "." << endl;
 		}
 		keyActivities.clear();
-		vector<Edge<WeightType>>().swap(keyActivities);
+		vector<WEdge<WeightType>>().swap(keyActivities);
 	}
 	pGraph->clear();
 	return 0;

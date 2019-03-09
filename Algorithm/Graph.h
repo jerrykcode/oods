@@ -73,6 +73,7 @@ protected:
 
 class UNWAdjNode : public AdjNode { //UnWeighted adjacent note
 public:
+	UNWAdjNode() {}
 	UNWAdjNode(Vertex adjVertex) : AdjNode(adjVertex) {}
 
 	virtual Vertex getAdjVertex() {
@@ -87,6 +88,7 @@ public:
 template<typename T>
 class WAdjNode : public AdjNode { //Weighted adjacent node
 public:
+	WAdjNode() {}
 	WAdjNode(Vertex adjVertex, T adjWeight) : AdjNode(adjVertex), adjWeight_(adjWeight) {}
 
 	virtual Vertex getAdjVertex() {
@@ -129,6 +131,9 @@ public:
 	virtual void clear() = 0;
 	virtual bool isWeighted() = 0;
 
+	virtual Graph *cloneGraph() = 0;
+	virtual Graph *inverseGraph() = 0;
+
 protected:
 	int nVertexes_;
 	int nEdges_;
@@ -145,6 +150,9 @@ public:
 	virtual void adj_iter_clear() = 0;
 	virtual void clear() = 0;
 	virtual bool isWeighted() = 0;
+
+	virtual Graph *cloneGraph() = 0;
+	virtual Graph *inverseGraph() = 0;
 };
 
 template<typename T>
@@ -161,6 +169,9 @@ public:
 
 	virtual T getEdgeWeight(Vertex v, Vertex w) = 0;
 	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight) = 0;
+
+	virtual Graph *cloneGraph() = 0;
+	virtual Graph *inverseGraph() = 0;
 };
 
 

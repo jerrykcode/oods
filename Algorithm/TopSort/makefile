@@ -1,13 +1,11 @@
 CC = g++
 TARGET = TopSortMain
-OBJ = TopSortMain.o
 
-$(TAREGT) : $(OBJ)
-	$(CC) -o $(TARGET) $(OBJ)
-
-INCLUDE = -I../
+GRAPH_PATH = ../
+INCLUDE = -I$(GRAPH_PATH)
 CXXFLAGS = $(INCLUDE)
 
-$(OBJ) : TopSortMain.cpp
-	$(CC) -c TopSortMain.cpp $(CXXFLAGS)
+DEPS = TopSort.h
 
+$(TARGET) : $(DEPS) TopSortMain.cpp
+	$(CC) -o $(TARGET) TopSortMain.cpp $(CXXFLAGS)

@@ -4,6 +4,7 @@
 class ListUNWGraph : public UNWGraph {
 public:
 	ListUNWGraph(int nVertexes, int nEdges, bool isDirected);
+	ListUNWGraph(int nVertexes, int nEdges, bool isDirected, vector<UNWAdjNode> *list);
 	~ListUNWGraph();
 
 	virtual void insertEdge(Edge *pEdge);
@@ -13,6 +14,9 @@ public:
 	virtual void clear();
 	virtual bool isWeighted();
 
+	virtual Graph *cloneGraph();
+	virtual Graph *inverseGraph();
+
 private:
 	vector<UNWAdjNode> *list_;
 	Vertex iter_v_;
@@ -21,6 +25,10 @@ private:
 
 inline ListUNWGraph::ListUNWGraph(int nVertexes, int nEdges, bool isDirected) : UNWGraph(nVertexes, nEdges, isDirected), iter_v_(NO_VALUE) {
 	list_ = new vector<UNWAdjNode>[nVertexes];
+}
+
+inline ListUNWGraph::ListUNWGraph(int nVertexes, int nEdges, bool isDirected, vector<UNWAdjNode> *list) : ListUNWGraph(nVertexes, nEdges, isDirected) {
+	list_ = list;
 }
 
 inline ListUNWGraph::~ListUNWGraph() {
@@ -69,12 +77,37 @@ inline bool ListUNWGraph::isWeighted() {
 	return false;
 }
 
+inline Graph * ListUNWGraph::cloneGraph() {
+	vector<UNWAdjNode> *list = new vector<UNWAdjNode>[nVertexes_];
+	for (int i = 0; i < nVertexes_; i++) {
+		list[i].resize(list_[i].size());
+		for (int j = 0; j < list_[i].size(); j++) {
+			list[i][j] = list_[i][j];
+		}
+	}
+	return (Graph *)(new ListUNWGraph(nVertexes_, nEdges_, isDirected_, list));
+}
+
+inline Graph * ListUNWGraph::inverseGraph() {
+	if (isDirected_) {
+		vector<UNWAdjNode> *list = new vector<UNWAdjNode>[nVertexes_];
+		for (int i = 0; i < nVertexes_; i++) {
+			for (UNWAdjNode unwAdjNode : list_[i]) {
+				list[unwAdjNode.getAdjVertex()].push_back(UNWAdjNode(i));
+			}
+		}
+		return (Graph *)(new ListUNWGraph(nVertexes_, nEdges_, isDirected_, list));
+	}
+	else return cloneGraph();
+}
+
 
 
 template<typename T>
 class ListWGraph : public WGraph<T> {
 public:
 	ListWGraph(int nVertexes, int nEdges, bool isDirected);
+	ListWGraph(int nVertexes, int nEdges, bool isDirected, vector<WAdjNode<T>> *list);
 	~ListWGraph();
 
 	virtual void insertEdge(Edge *pEdge);
@@ -87,6 +120,9 @@ public:
 	virtual T getEdgeWeight(Vertex v, Vertex w);
 	virtual void increaseEdgeWeight(Vertex v, Vertex w, T weight);
 
+	virtual Graph *cloneGraph();
+	virtual Graph *inverseGraph();
+
 private:
 
 	vector<WAdjNode<T>> *list_;
@@ -97,6 +133,11 @@ private:
 template<typename T>
 inline ListWGraph<T>::ListWGraph(int nVertexes, int nEdges, bool isDirected) : WGraph<T>(nVertexes, nEdges, isDirected), iter_v_(NO_VALUE) {
 	list_ = new vector<WAdjNode<T>>[nVertexes];
+}
+
+template<typename T>
+inline ListWGraph<T>::ListWGraph(int nVertexes, int nEdges, bool isDirected, vector<WAdjNode<T>> *list) : ListWGraph<T>(nVertexes, nEdges, isDirected) {
+	list_ = list;
 }
 
 template<typename T>
@@ -187,4 +228,30 @@ inline void ListWGraph<T>::increaseEdgeWeight(Vertex v, Vertex w, T weight) {
 				break;
 			}
 	}
+}
+
+template<typename T>
+inline Graph * ListWGraph<T>::cloneGraph() {
+	vector<WAdjNode<T>> *list = new vector<WAdjNode<T>>[this->nVertexes_];
+	for (int i = 0; i < this->nVertexes_; i++) {
+		list[i].resize(list_[i].size());
+		for (int j = 0; j < list_[i].size(); j++) {
+			list[i][j] = list_[i][j];
+		}
+	}
+	return (Graph *)(new ListWGraph<T>(this->nVertexes_, this->nEdges_, this->isDirected_, list));
+}
+
+template<typename T>
+inline Graph * ListWGraph<T>::inverseGraph() {
+	if (this->isDirected_) {
+		vector<WAdjNode<T>> *list = new vector<WAdjNode<T>>[this->nVertexes_];
+		for (int i = 0; i < this->nVertexes_; i++) {
+			for (WAdjNode<T> wAdjNode : list_[i]) {
+				list[wAdjNode.getAdjVertex()].push_back(WAdjNode<T>(i, wAdjNode.getAdjWeight()));
+			}
+		}
+		return (Graph *)(new ListWGraph<T>(this->nVertexes_, this->nEdges_, this->isDirected_, list));
+	}
+	else return cloneGraph();
 }
