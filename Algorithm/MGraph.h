@@ -227,10 +227,8 @@ template<typename T>
 inline void MatrixWGraph<T>::increaseEdgeWeight(Vertex v, Vertex w, T weight) {
 	if (v < 0 || v >= this->nVertexes_) return;
 	if (w < 0 || w >= this->nVertexes_) return;
+	if (matrix_[v][w] == NO_VALUE) matrix_[v][w] = 0;
 	matrix_[v][w] += weight;
-	if (!this->isDirected_) {
-		matrix_[w][v] += weight;
-	}
 }
 
 template<typename T>

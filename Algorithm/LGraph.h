@@ -202,12 +202,14 @@ inline T ListWGraph<T>::getEdgeWeight(Vertex v, Vertex w) {
 			if (wAdjNode.getAdjVertex() == v) {
 				return wAdjNode.getAdjWeight();
 			}
+		return NO_VALUE;
 	}
 	else {
 		for (WAdjNode<T> wAdjNode : list_[v]) 
 			if (wAdjNode.getAdjVertex() == w) {
 				return wAdjNode.getAdjWeight();
 			}
+		return NO_VALUE;
 	}
 }
 
@@ -215,19 +217,12 @@ template<typename T>
 inline void ListWGraph<T>::increaseEdgeWeight(Vertex v, Vertex w, T weight) {
 	if (v < 0 || v >= this->nVertexes_) return;
 	if (w < 0 || w >= this->nVertexes_) return;
-	for (WAdjNode<T> wAdjNode : list_[v]) {
-		if (wAdjNode.getAdjVertex() == w) {
-			wAdjNode.increaseAdjWeight(weight);
-			break;
+	for (auto it = list_[v].begin(); it != list_[v].end(); it++)
+		if (it->getAdjVertex() == w) {
+			it->increaseAdjWeight(weight);
+			return;
 		}
-	}
-	if (!this->isDirected_) {
-		for (WAdjNode<T> wAdjNode : list_[w]) 
-			if (wAdjNode.getAdjVertex() == v) {
-				wAdjNode.increaseAdjWeight(weight);
-				break;
-			}
-	}
+	insertEdge((Edge *)new WEdge<T>(v, w, weight));
 }
 
 template<typename T>

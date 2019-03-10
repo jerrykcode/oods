@@ -1,18 +1,17 @@
 #include "Dinic.h"
-#include "Dinic.cpp"
 #include "GraphInput.h"
 
 typedef int WeightType;
 
 int main() {
 	GraphInput<WeightType> graphInput;
-	Graph<WeightType> *pGraph = graphInput.createGraphByInput();
+	Graph *pGraph = graphInput.createGraphByInput();
 	Dinic<WeightType> dinic;
 	Vertex src, des;
 	cout << "Enter the src and des: " << endl;
 	cin >> src >> des;
 	WeightType maxFlow;
-	if (dinic.getMaxFlow(pGraph, src, des, &maxFlow)) {
+	if (dinic.getMaxFlow(pGraph, src, des, &maxFlow, false)) {
 		cout << "The maximum flow is " << maxFlow << endl;
 	}
 	else {

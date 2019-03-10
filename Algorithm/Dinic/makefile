@@ -1,9 +1,11 @@
 CC = g++
 TARGET = DinicMain
 
-DEPS = ..
-INCLUDE = -I$(DEPS)
+GRAPH_PATH = ..
+INCLUDE = -I$(GRAPH_PATH)
 CXXFLAGS = $(INCLUDE)
 
-$(TARGET) : DinicMain.cpp
+DEPS = Dinic.h
+
+$(TARGET) : $(DEPS) DinicMain.cpp
 	$(CC) -o $(TARGET) DinicMain.cpp $(CXXFLAGS)

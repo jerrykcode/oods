@@ -11,26 +11,6 @@ public:
 	bool top(Graph *pGraph, T *pMaxWeight, vector<WEdge<T>>& keyActivities);
 
 private:
-
-	typedef struct QNode {
-		Vertex v;
-		struct QNode *next;
-		QNode (Vertex v) : v(v), next(NULL) {}
-	} *QList;
-
-	class VQueue {
-	public:
-		VQueue();
-		~VQueue();
-
-		void push(Vertex v);
-		Vertex pop();
-		bool empty();
-
-	private:
-		QList head, tail;
-	};
-
 	int *inDegree;
 	int *outDegree;
 
@@ -122,42 +102,4 @@ inline bool TopSort<T>::top(Graph * pGraph, T * pMaxWeight, vector<WEdge<T>>& ke
 	free(latestEndTime);
 	pInverseGraph->clear();
 	return true;
-}
-
-//define Vertex Queue
-template<typename T>
-inline TopSort<T>::VQueue::VQueue() : head(NULL), tail(NULL) {
-
-}
-
-template<typename T>
-inline TopSort<T>::VQueue::~VQueue() {
-	while (!empty()) pop();
-}
-
-template<typename T>
-inline void TopSort<T>::VQueue::push(Vertex v) {
-	QList qlist = new QNode(v);
-	if (head == NULL) {
-		head = tail = qlist;
-	}
-	else {
-		tail->next = qlist;
-		tail = qlist;
-	}
-}
-
-template<typename T>
-inline Vertex TopSort<T>::VQueue::pop() {
-	if (empty()) return NO_VALUE;
-	QList qlist = head;
-	head = head->next;
-	Vertex v = qlist->v;
-	delete qlist;
-	return v;
-}
-
-template<typename T>
-inline bool TopSort<T>::VQueue::empty() {
-	return head == NULL;
 }

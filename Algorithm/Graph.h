@@ -174,5 +174,54 @@ public:
 	virtual Graph *inverseGraph() = 0;
 };
 
+typedef struct QNode {
+	Vertex v;
+	struct QNode *next;
+	QNode(Vertex v) : v(v), next(NULL) {}
+} *QList;
 
+class VQueue {
+public:
+	VQueue();
+	~VQueue();
 
+	void push(Vertex v);
+	Vertex pop();
+	bool empty();
+
+private:
+	QList head, tail;
+};
+
+//define Vertex Queue
+inline VQueue::VQueue() : head(NULL), tail(NULL) {
+
+}
+
+inline VQueue::~VQueue() {
+	while (!empty()) pop();
+}
+
+inline void VQueue::push(Vertex v) {
+	QList qlist = new QNode(v);
+	if (head == NULL) {
+		head = tail = qlist;
+	}
+	else {
+		tail->next = qlist;
+		tail = qlist;
+	}
+}
+
+inline Vertex VQueue::pop() {
+	if (empty()) return NO_VALUE;
+	QList qlist = head;
+	head = head->next;
+	Vertex v = qlist->v;
+	delete qlist;
+	return v;
+}
+
+inline bool VQueue::empty() {
+	return head == NULL;
+}
