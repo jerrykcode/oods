@@ -19,11 +19,9 @@ public:
 
 private:
 	vector<UNWAdjNode> *list_;
-	Vertex iter_v_;
-	int iter_count_;
 };
 
-inline ListUNWGraph::ListUNWGraph(int nVertexes, int nEdges, bool isDirected) : UNWGraph(nVertexes, nEdges, isDirected), iter_v_(NO_VALUE) {
+inline ListUNWGraph::ListUNWGraph(int nVertexes, int nEdges, bool isDirected) : UNWGraph(nVertexes, nEdges, isDirected) {
 	list_ = new vector<UNWAdjNode>[nVertexes];
 }
 
@@ -48,18 +46,21 @@ inline void ListUNWGraph::insertEdge(Edge * pEdge) {
 
 inline AdjNode * ListUNWGraph::adj_iter_begin(Vertex v) {
 	if (v < 0 || v >= nVertexes_) return NULL;
-	iter_v_ = v;
-	iter_count_ = 0;
 	if (list_[v].size() == 0) return NULL;
-	return (AdjNode *)(&list_[v][iter_count_++]);
+	pIterArgs_stack_.push(new IterArgs(v, 1));
+	return (AdjNode *)(&list_[v][0]);
 }
 
 inline AdjNode * ListUNWGraph::adj_iter_next() {
-	if (iter_v_ == NO_VALUE) return NULL;
-	if (iter_count_ < list_[iter_v_].size()) {
-		return (AdjNode *)(&list_[iter_v_][iter_count_++]);
+	if (pIterArgs_stack_.empty()) return NULL;
+	PIterArgs pIterArgs = pIterArgs_stack_.top();
+	if (pIterArgs->iter_count_ < list_[pIterArgs->iter_v_].size()) {
+		return (AdjNode *)(&list_[pIterArgs->iter_v_][pIterArgs->iter_count_++]);
 	}
-	else return NULL;
+	else {
+		pIterArgs_stack_.pop();
+		return NULL;
+	}
 }
 
 inline void ListUNWGraph::adj_iter_clear() {
@@ -125,13 +126,11 @@ public:
 
 private:
 
-	vector<WAdjNode<T>> *list_;
-	Vertex iter_v_;
-	int iter_count_;
+	vector<WAdjNode<T>> *list_;	
 };
 
 template<typename T>
-inline ListWGraph<T>::ListWGraph(int nVertexes, int nEdges, bool isDirected) : WGraph<T>(nVertexes, nEdges, isDirected), iter_v_(NO_VALUE) {
+inline ListWGraph<T>::ListWGraph(int nVertexes, int nEdges, bool isDirected) : WGraph<T>(nVertexes, nEdges, isDirected) {
 	list_ = new vector<WAdjNode<T>>[nVertexes];
 }
 
@@ -162,19 +161,22 @@ inline void ListWGraph<T>::insertEdge(Edge * pEdge) {
 template<typename T>
 inline AdjNode * ListWGraph<T>::adj_iter_begin(Vertex v) {
 	if (v < 0 || v >= this->nVertexes_) return NULL;
-	iter_v_ = v;
-	iter_count_ = 0;
-	if (list_[v].size() == 0) return NULL;
-	return (AdjNode *)(&list_[v][iter_count_++]);
+	if (list_[v].empty()) return NULL;
+	this->pIterArgs_stack_.push(new Graph::IterArgs(v, 1));
+	return (AdjNode *)(&list_[v][0]);
 }
 
 template<typename T>
 inline AdjNode * ListWGraph<T>::adj_iter_next() {
-	if (iter_v_ == NO_VALUE) return NULL;
-	if (iter_count_ < list_[iter_v_].size()) {
-		return (AdjNode *)(&list_[iter_v_][iter_count_++]);
+	if (this->pIterArgs_stack_.empty()) return NULL;
+	Graph::PIterArgs pIterArgs = this->pIterArgs_stack_.top();
+	if (pIterArgs->iter_count_ < list_[pIterArgs->iter_v_].size()) {
+		return (AdjNode *)(&list_[pIterArgs->iter_v_][pIterArgs->iter_count_++]);
 	}
-	else return NULL;
+	else {
+		this->pIterArgs_stack_.pop();
+		return NULL;
+	}
 }
 
 template<typename T>

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <stack>
 using namespace std;
 
 #define NO_VALUE -1
@@ -138,6 +139,14 @@ protected:
 	int nVertexes_;
 	int nEdges_;
 	bool isDirected_;
+
+	typedef struct IterArgs {
+		Vertex iter_v_;
+		int iter_count_;
+		IterArgs(Vertex iter_v, int iter_count) : iter_v_(iter_v), iter_count_(iter_count) {}
+	} *PIterArgs;
+
+	stack<PIterArgs> pIterArgs_stack_;
 };
 
 class UNWGraph : public Graph { //UnWeighted Graph
@@ -174,6 +183,7 @@ public:
 	virtual Graph *inverseGraph() = 0;
 };
 
+//define Vertex Queue
 typedef struct QNode {
 	Vertex v;
 	struct QNode *next;
@@ -193,7 +203,6 @@ private:
 	QList head, tail;
 };
 
-//define Vertex Queue
 inline VQueue::VQueue() : head(NULL), tail(NULL) {
 
 }

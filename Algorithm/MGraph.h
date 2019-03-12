@@ -20,12 +20,10 @@ public:
 private:
 
 	bool **matrix_;
-	Vertex iter_v_;
-	Vertex iter_w_;
 	UNWAdjNode *pLastUNWAdjNode;
 };
 
-inline MatrixUNWGraph::MatrixUNWGraph(int nVertexes, int nEdges, bool isDirected) : UNWGraph(nVertexes, nEdges, isDirected), iter_v_(NO_VALUE), pLastUNWAdjNode(NULL) {
+inline MatrixUNWGraph::MatrixUNWGraph(int nVertexes, int nEdges, bool isDirected) : UNWGraph(nVertexes, nEdges, isDirected), pLastUNWAdjNode(NULL) {
 	matrix_ = new bool *[nVertexes];
 	for (int i = 0; i < nVertexes; i++) {
 		matrix_[i] = new bool[nVertexes];
@@ -54,18 +52,23 @@ inline void MatrixUNWGraph::insertEdge(Edge * pEdge) {
 
 inline AdjNode * MatrixUNWGraph::adj_iter_begin(Vertex v) {
 	if (v < 0 || v >= nVertexes_) return NULL;
-	iter_v_ = v;
-	for (iter_w_ = 0; iter_w_ < nVertexes_; iter_w_++) {
-		if (matrix_[iter_v_][iter_w_]) return (AdjNode *)(pLastUNWAdjNode = new UNWAdjNode(iter_w_++));
-	}
+	for (Vertex w = 0; w < nVertexes_; w++) 
+		if (matrix_[v][w]) {
+			pIterArgs_stack_.push(new IterArgs(v, w + 1));
+			return (AdjNode *)(pLastUNWAdjNode = new UNWAdjNode(w));
+		}
 	return NULL;
 }
 
 inline AdjNode * MatrixUNWGraph::adj_iter_next() {
-	if (iter_v_ == NO_VALUE) return NULL;
-	for (; iter_w_ < nVertexes_; iter_w_++) {
-		if (matrix_[iter_v_][iter_w_]) return (AdjNode *)(pLastUNWAdjNode = new UNWAdjNode(iter_w_++));
-	}
+	if (pIterArgs_stack_.empty()) return NULL;
+	PIterArgs pIterArgs = pIterArgs_stack_.top();
+	for (Vertex w = pIterArgs->iter_count_; w < nVertexes_; w++) 
+		if (matrix_[pIterArgs->iter_v_][w]) {
+			pIterArgs->iter_count_ = w + 1;
+			return (AdjNode *)(pLastUNWAdjNode = new UNWAdjNode(w));
+		}
+	pIterArgs_stack_.pop();
 	return NULL;
 }
 
@@ -135,14 +138,12 @@ private:
 
 	void setMatrix(T **matrix);
 
-	T **matrix_;
-	Vertex iter_v_;
-	Vertex iter_w_;
+	T **matrix_;	
 	WAdjNode<T> *pLastWAdjNode;
 };
 
 template<typename T>
-inline MatrixWGraph<T>::MatrixWGraph(int nVertexes, int nEdges, bool isDirected) : WGraph<T>(nVertexes, nEdges, isDirected), iter_v_(NO_VALUE), pLastWAdjNode(NULL) {
+inline MatrixWGraph<T>::MatrixWGraph(int nVertexes, int nEdges, bool isDirected) : WGraph<T>(nVertexes, nEdges, isDirected), pLastWAdjNode(NULL) {
 	matrix_ = new T*[nVertexes];
 	for (int i = 0; i < nVertexes; i++) {
 		matrix_[i] = new T[nVertexes];
@@ -177,21 +178,24 @@ inline void MatrixWGraph<T>::insertEdge(Edge * pEdge) {
 template<typename T>
 inline AdjNode * MatrixWGraph<T>::adj_iter_begin(Vertex v) {
 	if (v < 0 || v >= this->nVertexes_) return NULL;
-	iter_v_ = v;
-	for (iter_w_ = 0; iter_w_ < this->nVertexes_; iter_w_++)
-		if (matrix_[iter_v_][iter_w_] != NO_VALUE) {
-			return (AdjNode *)(pLastWAdjNode = new WAdjNode<T>(iter_w_, matrix_[iter_v_][iter_w_]));
+	for (Vertex w = 0; w < this->nVertexes_; w++)
+		if (matrix_[v][w] != NO_VALUE) {
+			this->pIterArgs_stack_.push(new Graph::IterArgs(v, w + 1));
+			return (AdjNode *)(pLastWAdjNode = new WAdjNode<T>(w, matrix_[v][w]));
 		}
 	return NULL;
 }
 
 template<typename T>
 inline AdjNode * MatrixWGraph<T>::adj_iter_next() {
-	if (iter_v_ == NO_VALUE) return NULL;
-	for (iter_w_++; iter_w_ < this->nVertexes_; iter_w_++)
-		if (matrix_[iter_v_][iter_w_] != NO_VALUE) {
-			return (AdjNode *)(pLastWAdjNode = new WAdjNode<T>(iter_w_, matrix_[iter_v_][iter_w_]));
+	if (this->pIterArgs_stack_.empty()) return NULL;
+	Graph::PIterArgs pIterArgs = this->pIterArgs_stack_.top();
+	for (Vertex w = pIterArgs->iter_count_; w < this->nVertexes_; w++)
+		if (matrix_[pIterArgs->iter_v_][w] != NO_VALUE) {
+			pIterArgs->iter_count_ = w + 1;
+			return (AdjNode *)(pLastWAdjNode = new WAdjNode<T>(w, matrix_[pIterArgs->iter_v_][w]));
 		}
+	this->pIterArgs_stack_.pop();
 	return NULL;
 }
 
