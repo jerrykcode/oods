@@ -3,6 +3,7 @@
 #include "MGraph.h"
 #include "LGraph.h"
 #include <stack>
+#include <queue>
 
 template<typename T>
 class Dijkstra {
@@ -10,24 +11,48 @@ public:
 	Dijkstra();
 	~Dijkstra();
 
+	/* Return the shortest distance between src and des. */
 	T shortestPath(Graph *pGraph, Vertex src, Vertex des, vector<Vertex>& path);
+
+	/* Get the shortest distance between src and all the vertexes. */
 	void shortestPath(Graph *pGraph, Vertex src, T *dists, vector<Vertex>* paths);
+
+	void setOptimize(bool heapOptimize) {
+		heapOptimize_ = heapOptimize;
+	}
 
 private:
 	T *dist_;
 	bool *collected_;
 	Vertex *path_;
 
+	bool heapOptimize_;
+
 	bool dijkstra(Graph *pGraph, Vertex src, Vertex des);
+	bool dijkstra_no_optimize(Graph *pGraph, Vertex src, Vertex des);	
 	void findMin(Vertex *pMinVertex, T *pMinDist, int nVertexes);
+	bool dijkstra_optimize(Graph *pGraph, Vertex src, Vertex des);
 	void getPath(Vertex src, Vertex des, vector<Vertex>& path);
 
 	bool memory_alloced_;
+
+	//Data structures used by priority_queue
+	struct Node {
+		Vertex v;
+		T dist;
+		Node(Vertex v, T dist) : v(v), dist(dist) {}
+	};
+
+	struct cmp {
+		bool operator() (Node& a, Node& b) {
+			return a.dist > b.dist;
+		}
+	};
 };
 
 
 template<typename T>
-Dijkstra<T>::Dijkstra() {
+Dijkstra<T>::Dijkstra() : heapOptimize_(false) {
 
 }
 
@@ -69,7 +94,12 @@ void Dijkstra<T>::shortestPath(Graph *pGraph, Vertex src, T * dists, vector<Vert
 }
 
 template<typename T>
-bool Dijkstra<T>::dijkstra(Graph *pGraph, Vertex src, Vertex des) {
+inline bool Dijkstra<T>::dijkstra(Graph * pGraph, Vertex src, Vertex des) {
+	return heapOptimize_ ? dijkstra_optimize(pGraph, src, des) : dijkstra_no_optimize(pGraph, src, des);
+}
+
+template<typename T>
+bool Dijkstra<T>::dijkstra_no_optimize(Graph *pGraph, Vertex src, Vertex des) {
 	memory_alloced_ = false;
 	if (!pGraph->isWeighted()) return false;
 	//Calculate shortest distance by Dijkstra
@@ -150,6 +180,58 @@ void Dijkstra<T>::findMin(Vertex *pMinVertex, T *pMinDist, int nVertexes) {
 			*pMinDist = dist_[i];
 			*pMinVertex = i;
 		}
+}
+
+template<typename T>
+inline bool Dijkstra<T>::dijkstra_optimize(Graph * pGraph, Vertex src, Vertex des) {
+	memory_alloced_ = false;
+	if (!pGraph->isWeighted()) return false;
+	//Calculates the shortest distance by dijkstra algorithm with an optimization by priority queue
+	int nVertexes = pGraph->getVertexesNum();
+	if (nVertexes <= 1) return false;
+	if (src < 0 || src >= nVertexes) return false;
+	if (des != NO_VALUE && (des < 0 || des >= nVertexes)) return false;
+	//allocate memory
+	dist_ = new T[nVertexes];
+	fill(dist_, dist_ + nVertexes, NO_VALUE);
+	path_ = new Vertex[nVertexes];
+	fill(path_, path_ + nVertexes, NO_VALUE);
+	collected_ = new bool[nVertexes];
+	fill(collected_, collected_ + nVertexes, false);
+	memory_alloced_ = true;
+	dist_[src] = 0;
+	path_[src] = src;
+	priority_queue<Node, vector<Node>, cmp> q;
+	q.push(Node(src, dist_[src]));
+	while (!q.empty()) {
+		Vertex minV = q.top().v;
+		q.pop();
+		if (collected_[minV]) continue;
+		collected_[minV] = true;
+		if (des != NO_VALUE && des == minV) {
+			break;
+		}
+		for (AdjNode *pAdjNode = pGraph->adj_iter_begin(minV); pAdjNode != NULL; pAdjNode = pGraph->adj_iter_next()) {
+			Vertex adjVertex = pAdjNode->getAdjVertex();
+			T adjWeight = ((WAdjNode<T>*)pAdjNode)->getAdjWeight();
+			pGraph->adj_iter_clear();
+			if (adjWeight < 0) {
+				free(collected_);
+				return false;
+				//delete memory of dist_ and path_ in shortestPath function
+			}
+			if (!collected_[adjVertex]) {
+				if (dist_[minV] + adjWeight < dist_[adjVertex] || dist_[adjVertex] == NO_VALUE) {
+					dist_[adjVertex] = dist_[minV] + adjWeight;
+					q.push(Node(adjVertex, dist_[adjVertex]));
+					path_[adjVertex] = minV;
+				}
+			}
+		}
+	} //while
+	free(collected_);
+	//delete memory of dist_ and path_ in shortestPath function
+	return true;
 }
 
 template<typename T>

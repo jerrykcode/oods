@@ -12,6 +12,18 @@ int main() {
 	cin >> src;
 	cout << "Enter the des, enter " << NO_VALUE << " to calculate the shortest disance bewteen src and every vertexes: " << endl;
 	cin >> des;
+	cout << "Optimize?[Y/N]" << endl;
+	string cmd;	
+	while (1) {
+		cin >> cmd;
+		if (cmd == "Y" || cmd == "y") {
+			dijkstra.setOptimize(true);
+			break;
+		}
+		else if (cmd == "N" || cmd == "n") {
+			break;
+		}
+	}
 	if (des != NO_VALUE) {
 		vector<Vertex> path;
 		WeightType dist = dijkstra.shortestPath(pGraph, src, des, path);
