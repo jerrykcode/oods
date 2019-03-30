@@ -220,6 +220,7 @@ inline bool Prim<T>::prim_optimize(Graph * pGraph, T * pMstWeight, vector<Edge*>
 		Vertex minVertex = q.top().v;
 		q.pop();
 		if (minVertex != src) {
+			if (dist_[minVertex] == 0) continue;
 			*pMstWeight += dist_[minVertex];
 			pMstEdges.push_back((Edge *)(new WEdge<T>(pre_[minVertex], minVertex, dist_[minVertex])));
 			dist_[minVertex] = 0;
