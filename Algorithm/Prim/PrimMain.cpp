@@ -9,6 +9,16 @@ int main() {
 	Prim<WeightType> prim;
 	WeightType mstWeight;
 	Graph *pMstGraph = NULL;
+	string cmd;
+	while (true) {
+		cout << "Optimize? [Y/N]" << endl;
+		cin >> cmd;
+		if (cmd == "Y" || cmd == "y") {
+			prim.setOptimize(true);
+			break;
+		}
+		if (cmd == "N" || cmd == "n") break;
+	}
 	if (prim.getMST(pGraph, &mstWeight, &pMstGraph)) {
 		cout << "The weight of the MST:" << mstWeight << endl;		
 		pMstGraph->clear();

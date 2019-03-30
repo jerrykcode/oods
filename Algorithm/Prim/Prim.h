@@ -1,5 +1,6 @@
 #pragma once
 #include "GraphInitializer.h"
+#include <queue>
 
 template<typename T>
 class Prim {
@@ -18,20 +19,37 @@ public:
 	/* @param pMstGraph pointer of a pointer of a graph represented the resulting MST */
 	bool getMST(Graph *pGraph, T *pMstWeight, Graph **ppMstGraph);
 
+	void setOptimize(bool use_optimze) {
+		use_optimize_ = use_optimze;
+	}
+
 private:
+	struct Node {
+		Vertex v;
+		T dist;
+		Node(Vertex v, T dist) : v(v), dist(dist) {}
+	};
+	struct cmp {
+		bool operator () (Node& a, Node& b) {
+			return a.dist > b.dist;
+		}
+	};
 
 	//Prim algorithm
 	bool prim(Graph *pGraph, T *pMstWeight, vector<Edge*>& pMstEdges);
+	bool prim_no_optimize(Graph *pGraph, T *pMstWeight, vector<Edge*>& pMstEdges);
+	bool prim_optimize(Graph *pGraph, T *pMstWeight, vector<Edge*>& pMstEdges);
 
 	void findMin(T *pMinDist, Vertex *pMinVertex);
 
+	bool use_optimize_;
 	T *dist_;
 	Vertex *pre_;
 	int nVertexes_;
 };
 
 template<typename T>
-inline Prim<T>::Prim() {
+inline Prim<T>::Prim() : use_optimize_(false) {
 
 }
 
@@ -79,6 +97,11 @@ inline bool Prim<T>::getMST(Graph * pGraph, T * pMstWeight, Graph ** ppMstGraph)
 
 template<typename T>
 inline bool Prim<T>::prim(Graph * pGraph, T * pMstWeight, vector<Edge*>& pMstEdges) {
+	return use_optimize_ ? prim_optimize(pGraph, pMstWeight, pMstEdges) : prim_no_optimize(pGraph, pMstWeight, pMstEdges);
+}
+
+template<typename T>
+inline bool Prim<T>::prim_no_optimize(Graph * pGraph, T * pMstWeight, vector<Edge*>& pMstEdges) {
 	if (!pGraph->isWeighted()) return false; //The graph must be weighted
 	if (pGraph->isDirected()) return false; //The graph must NOT be directed
 	*pMstWeight = 0;
@@ -155,6 +178,7 @@ CLEAR:
 	return true;
 }
 
+
 template<typename T>
 inline void Prim<T>::findMin(T * pMinDist, Vertex * pMinVertex) {
 	*pMinDist = NO_VALUE;
@@ -163,4 +187,73 @@ inline void Prim<T>::findMin(T * pMinDist, Vertex * pMinVertex) {
 			*pMinDist = dist_[i];
 			*pMinVertex = i;
 		}
+}
+
+template<typename T>
+inline bool Prim<T>::prim_optimize(Graph * pGraph, T * pMstWeight, vector<Edge*>& pMstEdges)
+{
+	if (!pGraph->isWeighted()) return false; //The graph must be weighted
+	if (pGraph->isDirected()) return false; //The graph must NOT be directed
+	if (!pMstEdges.empty()) {
+		//clear pMstEdges
+		for (auto it = pMstEdges.begin(); it != pMstEdges.end(); it++)
+			if (*it != NULL) {
+				delete (*it);
+				*it = NULL;
+			}
+		pMstEdges.clear();
+	}
+	*pMstWeight = 0; //Initialize
+	nVertexes_ = pGraph->getVertexesNum();	
+	if (nVertexes_ < 1) return false;
+	else if (nVertexes_ == 1) return true;
+	dist_ = new T[nVertexes_];
+	fill(dist_, dist_ + nVertexes_, NO_VALUE);
+	pre_ = new Vertex[nVertexes_];
+	Vertex src = 0;
+	dist_[src] = 0;
+	pre_[src] = 0;
+	priority_queue<Node, vector<Node>, cmp> q;
+	q.push(Node(src, dist_[src]));
+	int vcount = 0;
+	while (!q.empty()) {
+		Vertex minVertex = q.top().v;
+		q.pop();
+		if (minVertex != src) {
+			*pMstWeight += dist_[minVertex];
+			pMstEdges.push_back((Edge *)(new WEdge<T>(pre_[minVertex], minVertex, dist_[minVertex])));
+			dist_[minVertex] = 0;
+		}
+		vcount++;
+		for (AdjNode *pAdjNode = pGraph->adj_iter_begin(minVertex); pAdjNode != NULL; pAdjNode = pGraph->adj_iter_next()) {
+			//For every vertexes adjacent to minVertex
+			Vertex adjVertex = pAdjNode->getAdjVertex();
+			T adjWeight = ((WAdjNode<T> *)pAdjNode)->getAdjWeight();
+			pGraph->adj_iter_clear();
+			if (adjWeight < 0) {
+				goto CLEAR;
+			}
+			if (dist_[adjVertex] != 0) {
+				if (adjWeight < dist_[adjVertex] || dist_[adjVertex] == NO_VALUE) {
+					dist_[adjVertex] = adjWeight;
+					q.push(Node(adjVertex, dist_[adjVertex]));
+					pre_[adjVertex] = minVertex;
+				}
+			}
+		}
+	} //while
+CLEAR:
+	free(dist_);
+	free(pre_);
+	if (vcount < nVertexes_) {
+		for (auto it = pMstEdges.begin(); it != pMstEdges.end(); it++)
+			if (*it != NULL) {
+				delete (*it);
+				*it = NULL;
+			}
+		pMstEdges.clear();
+		vector<Edge *>().swap(pMstEdges);
+		return false;
+	}
+	return true;
 }
