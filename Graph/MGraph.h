@@ -159,7 +159,7 @@ bool MatrixWGraph<T>::insertEdge(Edge * p_edge) {
 		this->matrix_[v][w] = true;
 		w_matrix_[v][w] = weight;
 		this->n_edges_++;
-		if (!isDirected()) {
+		if (!this->isDirected()) {
 			this->matrix_[w][v] = true;
 			w_matrix_[w][v] = weight;
 			this->n_edges_++;
@@ -190,7 +190,7 @@ Graph * MatrixWGraph<T>::cloneGraph() {
 
 template<typename T>
 Graph * MatrixWGraph<T>::inverseGraph() {
-	if (isDirected()) {
+	if (this->isDirected()) {
 		bool ** matrix = new bool * [this->n_vertices_];
 		T ** w_matrix = new T * [this->n_vertices_];
 		for (size_t i = 0; i < this->n_vertices_; i++) {
@@ -229,7 +229,7 @@ bool MatrixWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
 	if (w >= this->n_vertices_) return false;
 	if (this->matrix_[v][w]) {
 		w_matrix_[v][w] = new_weight;
-		if (!isDirected()) {
+		if (!this->isDirected()) {
 			w_matrix_[w][v] = new_weight;
 		}
 		return true;

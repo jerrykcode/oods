@@ -1,5 +1,6 @@
 #pragma once
 #include "Vertex.h"
+#include "malloc.h"
 #include <vector>
 #include <stack>
 using namespace std;

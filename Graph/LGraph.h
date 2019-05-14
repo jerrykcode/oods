@@ -141,7 +141,7 @@ bool ListWGraph<T>::insertEdge(Edge * p_edge) {
 		T weight = ((WEdge<T> *)p_edge)->getWeight();
 		list_[v].push_back(WAdjNode<T>(w, weight));
 		this->n_edges_++;
-		if (!isDirected()) {
+		if (!this->isDirected()) {
 			list_[w].push_back(WAdjNode<T>(v, weight));
 			this->n_edges_++;
 		}
@@ -171,7 +171,7 @@ Graph * ListWGraph<T>::cloneGraph() {
 
 template<typename T>
 Graph * ListWGraph<T>::inverseGraph() {
-	if (isDirected()) {
+	if (this->isDirected()) {
 		vector<WAdjNode<T>> * list = new vector<WAdjNode<T>>[this->n_vertices_];
 		for (Vertex i = 0; i < this->n_vertices_; i++) {
 			for (auto it = list_[i].begin(); it != list_[i].end(); it++) {
@@ -204,7 +204,7 @@ bool ListWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
 			break;
 		}
 	}
-	if (!isDirected() && flag) {
+	if (!this->isDirected() && flag) {
 		for (auto it = list_[w].begin(); it != list_[w].end(); it++) {
 			if (it->getAdjVertex() == v) {
 				it->setAdjWeight(new_weight);
@@ -219,7 +219,7 @@ template<typename T>
 bool ListWGraph<T>::getEdgeWeight(Vertex v, Vertex w, T * p_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
-	if (!isDirected() && list_[v].size() > list_[w].size()) {
+	if (!this->isDirected() && list_[v].size() > list_[w].size()) {
 		Vertex tmp = v;
 		v = w;
 		w = tmp;	
