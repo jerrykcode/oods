@@ -26,20 +26,20 @@ private:
 	bool memory_alloced;
 };
 
-ListUNWGraph::ListUNWGraph(size_t n_vertices,bool is_directed) : UNWGraph(n_vertices, is_directed), memory_alloced(true) {
+inline ListUNWGraph::ListUNWGraph(size_t n_vertices,bool is_directed) : UNWGraph(n_vertices, is_directed), memory_alloced(true) {
 	list_ = new vector<UNWAdjNode>[this->n_vertices_];
 }
 
-ListUNWGraph::ListUNWGraph(vector<UNWAdjNode> *list, size_t n_vertices, size_t n_edges, bool is_directed) :
+inline ListUNWGraph::ListUNWGraph(vector<UNWAdjNode> *list, size_t n_vertices, size_t n_edges, bool is_directed) :
 	UNWGraph(n_vertices, is_directed), memory_alloced(true), list_(list) {
 	this->n_edges_ = n_edges;
 }
 
-ListUNWGraph::~ListUNWGraph() {
+inline ListUNWGraph::~ListUNWGraph() {
 	clear();
 }
 
-bool ListUNWGraph::insertEdge(Edge *p_edge) {
+inline bool ListUNWGraph::insertEdge(Edge *p_edge) {
 	Vertex v, w;
 	p_edge->getVertices(&v, &w);
 	if (v >= this->n_vertices_) return false; //Vertex is alway unsigned type, >= 0
@@ -53,14 +53,14 @@ bool ListUNWGraph::insertEdge(Edge *p_edge) {
 	return true;
 }
 
-Iterator * ListUNWGraph::getAdjIterator(Vertex v) {
+inline Iterator * ListUNWGraph::getAdjIterator(Vertex v) {
 	if (v >= this->n_vertices_) {
 		return NULL;
 	}
 	return (Iterator *)(new ListUNWIterator(list_[v]));
 }
 
-Graph * ListUNWGraph::cloneGraph() {
+inline Graph * ListUNWGraph::cloneGraph() {
 	vector<UNWAdjNode> *list = new vector<UNWAdjNode>[this->n_vertices_];
 	for (Vertex i = 0; i < this->n_vertices_; i++) {
 		list[i].resize(list_[i].size());
@@ -70,7 +70,7 @@ Graph * ListUNWGraph::cloneGraph() {
 	return (Graph *)(new ListUNWGraph(list, this->n_vertices_, this->n_edges_, this->is_directed_));
 }
 
-Graph * ListUNWGraph::inverseGraph() {
+inline Graph * ListUNWGraph::inverseGraph() {
 	if (this->is_directed_) {
 		vector<UNWAdjNode> *list = new vector<UNWAdjNode>[this->n_vertices_];
 		for (Vertex i = 0; i < this->n_vertices_; i++) {
@@ -83,7 +83,7 @@ Graph * ListUNWGraph::inverseGraph() {
 	else return cloneGraph();
 }
 
-void ListUNWGraph::clear() {
+inline void ListUNWGraph::clear() {
 	if (!memory_alloced) return;
 	for (size_t i = 0; i < this->n_vertices_; i++) {
 		vector<UNWAdjNode>().swap(list_[i]);
@@ -116,23 +116,23 @@ private:
 };
 
 template<typename T>
-ListWGraph<T>::ListWGraph(size_t n_vertices, bool is_directed) : WGraph<T>(n_vertices, is_directed), memory_alloced_(true) {
+inline ListWGraph<T>::ListWGraph(size_t n_vertices, bool is_directed) : WGraph<T>(n_vertices, is_directed), memory_alloced_(true) {
 	list_ = new vector<WAdjNode<T>>[n_vertices];
 }
 
 template<typename T>
-ListWGraph<T>::ListWGraph(vector<WAdjNode<T>>* list, size_t n_vertices, size_t n_edges, bool is_directed) :
+inline ListWGraph<T>::ListWGraph(vector<WAdjNode<T>>* list, size_t n_vertices, size_t n_edges, bool is_directed) :
 	WGraph<T>(n_vertices, is_directed), memory_alloced_(true), list_(list) {
 	this->n_edges_ = n_edges;
 }
 
 template<typename T>
-ListWGraph<T>::~ListWGraph() {
+inline ListWGraph<T>::~ListWGraph() {
 	clear();
 }
 
 template<typename T>
-bool ListWGraph<T>::insertEdge(Edge * p_edge) {
+inline bool ListWGraph<T>::insertEdge(Edge * p_edge) {
 	if (p_edge->hasWeight()) {
 		Vertex v, w;
 		p_edge->getVertices(&v, &w);
@@ -151,7 +151,7 @@ bool ListWGraph<T>::insertEdge(Edge * p_edge) {
 }
 
 template<typename T>
-Iterator * ListWGraph<T>::getAdjIterator(Vertex v) {
+inline Iterator * ListWGraph<T>::getAdjIterator(Vertex v) {
 	if (v >=this->n_vertices_) {
 		return NULL;
 	}
@@ -159,7 +159,7 @@ Iterator * ListWGraph<T>::getAdjIterator(Vertex v) {
 }
 
 template<typename T>
-Graph * ListWGraph<T>::cloneGraph() {
+inline Graph * ListWGraph<T>::cloneGraph() {
 	vector<WAdjNode<T>> * list = new vector<WAdjNode<T>>[this->n_vertices_];
 	for (Vertex i = 0; i < this->n_vertices_; i++) {
 		list[i].resize(list_[i].size());
@@ -170,7 +170,7 @@ Graph * ListWGraph<T>::cloneGraph() {
 }
 
 template<typename T>
-Graph * ListWGraph<T>::inverseGraph() {
+inline Graph * ListWGraph<T>::inverseGraph() {
 	if (this->isDirected()) {
 		vector<WAdjNode<T>> * list = new vector<WAdjNode<T>>[this->n_vertices_];
 		for (Vertex i = 0; i < this->n_vertices_; i++) {
@@ -184,7 +184,7 @@ Graph * ListWGraph<T>::inverseGraph() {
 }
 
 template<typename T>
-void ListWGraph<T>::clear() {
+inline void ListWGraph<T>::clear() {
 	if (!memory_alloced_) return;
 	for (size_t i = 0; i < this->n_vertices_; i++) {
 		vector<WAdjNode<T>>().swap(list_[i]);
@@ -193,7 +193,7 @@ void ListWGraph<T>::clear() {
 }
 
 template<typename T>
-bool ListWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
+inline bool ListWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
 	bool flag = false;
@@ -216,7 +216,7 @@ bool ListWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
 }
 
 template<typename T>
-bool ListWGraph<T>::getEdgeWeight(Vertex v, Vertex w, T * p_weight) {
+inline bool ListWGraph<T>::getEdgeWeight(Vertex v, Vertex w, T * p_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
 	if (!this->isDirected() && list_[v].size() > list_[w].size()) {

@@ -20,11 +20,11 @@ private:
 	size_t adj_v_idx_;
 };
 
-ListUNWIterator::ListUNWIterator(vector<UNWAdjNode>& list) : list_(list), adj_v_idx_(0) {
+inline ListUNWIterator::ListUNWIterator(vector<UNWAdjNode>& list) : list_(list), adj_v_idx_(0) {
 
 }
 
-AdjNode * ListUNWIterator::next() {
+inline AdjNode * ListUNWIterator::next() {
 	if (adj_v_idx_ < list_.size()) {
 		return (AdjNode *)(&list_[adj_v_idx_++]);
 	}
@@ -43,12 +43,12 @@ private:
 };
 
 template<typename T>
-ListWIterator<T>::ListWIterator(vector<WAdjNode<T>>& list) : list_(list), adj_v_idx_(0) {
+inline ListWIterator<T>::ListWIterator(vector<WAdjNode<T>>& list) : list_(list), adj_v_idx_(0) {
 
 }
 
 template<typename T>
-AdjNode * ListWIterator<T>::next() {
+inline AdjNode * ListWIterator<T>::next() {
 	if (adj_v_idx_ < list_.size()) {
 		return (AdjNode *)(&list_[adj_v_idx_++]);
 	}
@@ -68,17 +68,17 @@ private:
 	UNWAdjNode * last_;
 };
 
-MatrixUNWIterator::MatrixUNWIterator(bool * has_edge, size_t n_vertices) : has_edge_(has_edge), n_vertices_(n_vertices), adj_v_idx_(0), last_(NULL) {
+inline MatrixUNWIterator::MatrixUNWIterator(bool * has_edge, size_t n_vertices) : has_edge_(has_edge), n_vertices_(n_vertices), adj_v_idx_(0), last_(NULL) {
 
 }
 
-MatrixUNWIterator::~MatrixUNWIterator() {
+inline MatrixUNWIterator::~MatrixUNWIterator() {
 	if (last_ != NULL) {
 		delete last_;
 	}
 }
 
-AdjNode * MatrixUNWIterator::next() {
+inline AdjNode * MatrixUNWIterator::next() {
 	if (last_ != NULL) {
 		delete last_;
 	}
@@ -108,7 +108,7 @@ private:
 };
 
 template<typename T>
-MatrixWIterator<T>::MatrixWIterator(bool * has_edge, T * edge_weight, size_t n_vertices) : 
+inline MatrixWIterator<T>::MatrixWIterator(bool * has_edge, T * edge_weight, size_t n_vertices) :
 	has_edge_(has_edge) , 
 	edge_weight_(edge_weight),
 	n_vertices_(n_vertices),
@@ -116,14 +116,14 @@ MatrixWIterator<T>::MatrixWIterator(bool * has_edge, T * edge_weight, size_t n_v
 	last_(NULL) {}
 
 template<typename T>
-MatrixWIterator<T>::~MatrixWIterator() {
+inline MatrixWIterator<T>::~MatrixWIterator() {
 	if (last_ != NULL) {
 		delete last_;
 	}
 }
 
 template<typename T>
-AdjNode * MatrixWIterator<T>::next() {
+inline AdjNode * MatrixWIterator<T>::next() {
 	if (last_ != NULL) {
 		delete last_;
 	}

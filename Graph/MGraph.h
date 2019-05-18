@@ -27,7 +27,7 @@ private:
 	bool memory_alloced;
 };
 
-MatrixUNWGraph::MatrixUNWGraph(size_t n_vertices, bool is_directed) : UNWGraph(n_vertices, is_directed), memory_alloced(true) {
+inline MatrixUNWGraph::MatrixUNWGraph(size_t n_vertices, bool is_directed) : UNWGraph(n_vertices, is_directed), memory_alloced(true) {
 	this->matrix_ = new bool*[n_vertices];
 	for (size_t i = 0; i < n_vertices; i++) {
 		this->matrix_[i] = new bool[n_vertices];
@@ -35,17 +35,17 @@ MatrixUNWGraph::MatrixUNWGraph(size_t n_vertices, bool is_directed) : UNWGraph(n
 	}
 }
 
-MatrixUNWGraph::MatrixUNWGraph(bool **matrix, size_t n_vertices, size_t n_edges, bool is_directed) :
+inline MatrixUNWGraph::MatrixUNWGraph(bool **matrix, size_t n_vertices, size_t n_edges, bool is_directed) :
 	UNWGraph(n_vertices, is_directed), memory_alloced(true) {
 	this->n_edges_ = n_edges;
 	this->matrix_ = matrix;
 }
 
-MatrixUNWGraph::~MatrixUNWGraph() {
+inline MatrixUNWGraph::~MatrixUNWGraph() {
 	clear();
 }
 
-bool MatrixUNWGraph::insertEdge(Edge * p_edge) {
+inline bool MatrixUNWGraph::insertEdge(Edge * p_edge) {
 	Vertex v, w;
 	p_edge->getVertices(&v, &w);
 	if (v >= this->n_vertices_) return false; //Vertex is always unsigned type, >= 0
@@ -59,12 +59,12 @@ bool MatrixUNWGraph::insertEdge(Edge * p_edge) {
 	return true;
 }
 
-Iterator * MatrixUNWGraph::getAdjIterator(Vertex v) {
+inline Iterator * MatrixUNWGraph::getAdjIterator(Vertex v) {
 	if (v >= this->n_vertices_) return NULL;
 	return (Iterator *)(new MatrixUNWIterator(this->matrix_[v], this->n_vertices_));
 }
 
-Graph * MatrixUNWGraph::cloneGraph() {
+inline Graph * MatrixUNWGraph::cloneGraph() {
 	bool **matrix = new bool*[this->n_vertices_];
 	for (size_t i = 0; i < this->n_vertices_; i++) {
 		matrix[i] = new bool[this->n_vertices_];
@@ -73,7 +73,7 @@ Graph * MatrixUNWGraph::cloneGraph() {
 	return (Graph *)(new MatrixUNWGraph(matrix, this->n_vertices_, this->n_edges_, this->is_directed_));
 }
 
-Graph * MatrixUNWGraph::inverseGraph() {
+inline Graph * MatrixUNWGraph::inverseGraph() {
 	if (isDirected()) {
 		bool **matrix = new bool*[this->n_vertices_];
 		for (size_t i = 0; i < this->n_vertices_; i++) {
@@ -92,7 +92,7 @@ Graph * MatrixUNWGraph::inverseGraph() {
 	else return cloneGraph();
 }
 
-void MatrixUNWGraph::clear() {
+inline void MatrixUNWGraph::clear() {
 	if (!memory_alloced) return;
 	for (size_t i = 0; i < this->n_vertices_; i++) {
 		free(matrix_[i]);
@@ -126,7 +126,7 @@ private:
 };
 
 template<typename T>
-MatrixWGraph<T>::MatrixWGraph(size_t n_vertices, bool is_directed) : WGraph<T>(n_vertices, is_directed), memory_alloced_(true) {
+inline MatrixWGraph<T>::MatrixWGraph(size_t n_vertices, bool is_directed) : WGraph<T>(n_vertices, is_directed), memory_alloced_(true) {
 	this->matrix_ = new bool * [n_vertices];
 	w_matrix_ = new T * [n_vertices];
 	for (size_t i = 0; i < n_vertices; i++) {
@@ -137,19 +137,19 @@ MatrixWGraph<T>::MatrixWGraph(size_t n_vertices, bool is_directed) : WGraph<T>(n
 }
 
 template<typename T>
-MatrixWGraph<T>::MatrixWGraph(bool **matrix, T **w_matrix, size_t n_vertices, size_t n_edges, bool is_directed) :
+inline MatrixWGraph<T>::MatrixWGraph(bool **matrix, T **w_matrix, size_t n_vertices, size_t n_edges, bool is_directed) :
 	WGraph<T>(n_vertices, is_directed), memory_alloced_(true), w_matrix_(w_matrix) {
 	this->n_edges_ = n_edges;
 	this->matrix_ = matrix;
 }
 
 template<typename T>
-MatrixWGraph<T>::~MatrixWGraph() {
+inline MatrixWGraph<T>::~MatrixWGraph() {
 	clear();
 }
 
 template<typename T>
-bool MatrixWGraph<T>::insertEdge(Edge * p_edge) {
+inline bool MatrixWGraph<T>::insertEdge(Edge * p_edge) {
 	if (p_edge->hasWeight()) {
 		Vertex v, w;
 		p_edge->getVertices(&v, &w);
@@ -170,13 +170,13 @@ bool MatrixWGraph<T>::insertEdge(Edge * p_edge) {
 }
 
 template<typename T>
-Iterator * MatrixWGraph<T>::getAdjIterator(Vertex v) {
+inline Iterator * MatrixWGraph<T>::getAdjIterator(Vertex v) {
 	if (v >= this->n_vertices_) return NULL;
 	return (Iterator *)(new MatrixWIterator<T>(this->matrix_[v], w_matrix_[v], this->n_vertices_));
 }
 
 template<typename T>
-Graph * MatrixWGraph<T>::cloneGraph() {
+inline Graph * MatrixWGraph<T>::cloneGraph() {
 	bool ** matrix = new bool * [this->n_vertices_];
 	T ** w_matrix = new T * [this->n_vertices_];
 	for (size_t i = 0; i < this->n_vertices_; i++) {
@@ -189,7 +189,7 @@ Graph * MatrixWGraph<T>::cloneGraph() {
 }
 
 template<typename T>
-Graph * MatrixWGraph<T>::inverseGraph() {
+inline Graph * MatrixWGraph<T>::inverseGraph() {
 	if (this->isDirected()) {
 		bool ** matrix = new bool * [this->n_vertices_];
 		T ** w_matrix = new T * [this->n_vertices_];
@@ -213,7 +213,7 @@ Graph * MatrixWGraph<T>::inverseGraph() {
 
 
 template<typename T>
-void MatrixWGraph<T>::clear() {
+inline void MatrixWGraph<T>::clear() {
 	if (!memory_alloced_) return;
 	for (size_t i = 0; i < this->n_vertices_; i++) {
 		free(this->matrix_[i]);
@@ -224,7 +224,7 @@ void MatrixWGraph<T>::clear() {
 }
 
 template<typename T>
-bool MatrixWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
+inline bool MatrixWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
 	if (this->matrix_[v][w]) {
@@ -238,7 +238,7 @@ bool MatrixWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
 }
 
 template<typename T>
-bool MatrixWGraph<T>::getEdgeWeight(Vertex v, Vertex w, T * p_weight) {
+inline bool MatrixWGraph<T>::getEdgeWeight(Vertex v, Vertex w, T * p_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
 	if (this->matrix_[v][w]) {
