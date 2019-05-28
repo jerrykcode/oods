@@ -6,5 +6,7 @@ GRAPH_PATH = ../../../Graph
 INCLUDE = -I$(MST_PATH) -I$(GRAPH_PATH)
 CXXFLAGS = $(INCLUDE)
 
-$(TARGET) :  main.cpp
+DEPS = $(MST_PATH)/* $(GRAPH_PATH)/*
+
+$(TARGET) :  $(DEPS)
 	$(CC) -o $(TARGET) main.cpp $(CXXFLAGS)
