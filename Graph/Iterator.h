@@ -7,7 +7,11 @@ using namespace std;
 /* Iterator abstract class */
 class Iterator {
 public:
+	/* Returns the next AdjNode *, or NULL if not exist. */
 	virtual AdjNode * next() = 0;
+
+	/* Returns true if the AdjNode * returned from next function is a reference to the adjacent node in graph. */
+	virtual bool isGraphReference() = 0;
 };
 
 /* Iterator for ListUNWGraph */
@@ -15,6 +19,7 @@ class ListUNWIterator : public Iterator {
 public:	
 	ListUNWIterator(vector<UNWAdjNode>& list);
 	virtual AdjNode * next();
+	virtual bool isGraphReference();
 private:
 	vector<UNWAdjNode>& list_;
 	size_t adj_v_idx_;
@@ -31,12 +36,17 @@ inline AdjNode * ListUNWIterator::next() {
 	return NULL;
 }
 
+inline bool ListUNWIterator::isGraphReference() {
+	return true;
+}
+
 /* Iterator for ListWGraph */
 template<typename T>
 class ListWIterator : public Iterator {
 public:
 	ListWIterator(vector<WAdjNode<T>>& list);
 	virtual AdjNode * next();
+	virtual bool isGraphReference();
 private:
 	vector<WAdjNode<T>>& list_;
 	size_t adj_v_idx_;
@@ -55,12 +65,18 @@ inline AdjNode * ListWIterator<T>::next() {
 	return NULL;
 }
 
+template<typename T>
+inline bool ListWIterator<T>::isGraphReference() {
+	return true;
+}
+
 /* Iterator for MatrixUNWGraph */
 class MatrixUNWIterator : public Iterator {
 public:
 	MatrixUNWIterator(bool *adj_nodes, size_t n_vertices);
 	~MatrixUNWIterator();
 	virtual AdjNode * next();
+	virtual bool isGraphReference();
 private:
 	bool * has_edge_;
 	size_t n_vertices_;
@@ -92,6 +108,10 @@ inline AdjNode * MatrixUNWIterator::next() {
 	return NULL;
 }
 
+inline bool MatrixUNWIterator::isGraphReference() {
+	return false;
+}
+
 /* Iterator for MatrixWGraph */
 template<typename T>
 class MatrixWIterator : public Iterator {
@@ -99,6 +119,7 @@ public:
 	MatrixWIterator(bool * has_edge, T * edge_weight, size_t n_vertices);
 	~MatrixWIterator();
 	virtual AdjNode * next();
+	virtual bool isGraphReference();
 private:
 	bool * has_edge_;
 	T * edge_weight_;
@@ -135,4 +156,9 @@ inline AdjNode * MatrixWIterator<T>::next() {
 		}
 	}
 	return NULL;
+}
+
+template<typename T>
+inline bool MatrixWIterator<T>::isGraphReference() {
+	return false;
 }

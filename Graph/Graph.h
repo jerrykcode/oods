@@ -67,6 +67,6 @@ public:
 		return true;
 	}
 
-	virtual bool changeEdgeWeight(Vertex v, Vertex w, T new_weight) = 0;
+	virtual bool increaseEdgeWeight(Vertex v, Vertex w, T increase_weight) = 0;
 	virtual bool getEdgeWeight(Vertex v, Vertex w, T * p_weight) = 0;
 };

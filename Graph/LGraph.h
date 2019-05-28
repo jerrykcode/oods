@@ -107,7 +107,7 @@ public:
 	virtual void clear();
 
 	//Inherited from WGraph<T> abstract class
-	virtual bool changeEdgeWeight(Vertex v, Vertex w, T new_weight);
+	virtual bool increaseEdgeWeight(Vertex v, Vertex w, T increase_weight);
 	virtual bool getEdgeWeight(Vertex v, Vertex w, T * p_weight);
 
 private:
@@ -193,24 +193,19 @@ inline void ListWGraph<T>::clear() {
 }
 
 template<typename T>
-inline bool ListWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
+inline bool ListWGraph<T>::increaseEdgeWeight(Vertex v, Vertex w, T increase_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
-	bool flag = false;
+	bool flag = true;
 	for (auto it = list_[v].begin(); it != list_[v].end(); it++) {
 		if (it->getAdjVertex() == w) {
-			it->setAdjWeight(new_weight);
-			flag = true;
+			it->setAdjWeight(it->getAdjWeight() + increase_weight);
+			flag = false;
 			break;
 		}
 	}
-	if (!this->isDirected() && flag) {
-		for (auto it = list_[w].begin(); it != list_[w].end(); it++) {
-			if (it->getAdjVertex() == v) {
-				it->setAdjWeight(new_weight);
-				break;
-			}
-		}
+	if (flag) {
+		list_[v].push_back(WAdjNode<T>(w, increase_weight));
 	}
 	return flag;
 }

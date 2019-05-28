@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.6)
+project(mf)
+add_executable(mf main.cpp)
+include_directories(../)
+include_directories(../../../Graph/)

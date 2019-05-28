@@ -118,7 +118,7 @@ public:
 	virtual void clear();
 
 	//Inherited from WGraph<T> abstract class
-	virtual bool changeEdgeWeight(Vertex v, Vertex w, T new_weight);
+	virtual bool increaseEdgeWeight(Vertex v, Vertex w, T new_weight);
 	virtual bool getEdgeWeight(Vertex v, Vertex w, T * p_weight);
 private:
 	T **w_matrix_;
@@ -224,17 +224,16 @@ inline void MatrixWGraph<T>::clear() {
 }
 
 template<typename T>
-inline bool MatrixWGraph<T>::changeEdgeWeight(Vertex v, Vertex w, T new_weight) {
+inline bool MatrixWGraph<T>::increaseEdgeWeight(Vertex v, Vertex w, T increase_weight) {
 	if (v >= this->n_vertices_) return false;
 	if (w >= this->n_vertices_) return false;
 	if (this->matrix_[v][w]) {
-		w_matrix_[v][w] = new_weight;
-		if (!this->isDirected()) {
-			w_matrix_[w][v] = new_weight;
-		}
-		return true;
+		w_matrix_[v][w] += increase_weight;		
 	}
-	else return false;
+	else {
+		w_matrix_[v][w] = increase_weight;	
+	}
+	return true;
 }
 
 template<typename T>
