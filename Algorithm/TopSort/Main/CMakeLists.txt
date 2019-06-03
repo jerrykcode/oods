@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 2.6)
+project(topsort)
+add_executable(topsort main.cpp)
+include_directories(../)
+include_directories(../../../Graph/)
