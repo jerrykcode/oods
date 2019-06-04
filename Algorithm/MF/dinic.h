@@ -66,6 +66,7 @@ bool Dinic<EdgeWeight, FlowWeight>::bfs(WGraph<EdgeWeight> * p_graph, Vertex src
 				vqueue_.push(adj_v);
 			}
 		} //for
+		delete it;
 	} //while
 	return dist_[sink] != EDGE_WEIGHT_NO_VALUE;
 }
@@ -94,6 +95,7 @@ EdgeWeight Dinic<EdgeWeight, FlowWeight>::dfs(WGraph<EdgeWeight> * p_graph, Vert
 			}
 		}
 	} //for
+	delete it;
 	return 0;
 }
 

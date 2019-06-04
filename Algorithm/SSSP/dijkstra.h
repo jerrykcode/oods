@@ -91,6 +91,7 @@ bool Dijkstra<EdgeWeight, DistWeight>::private_getSingleSourceShortestPath(Graph
 				}
 			}
 		} //for
+		delete it;
 	} //while
 	if (des != n_vertices && !collected_[des]) result = false; //If we can not reach des from src
 END:

@@ -124,6 +124,7 @@ bool Prim<EdgeWeight, MstWeight>::prim_getMst(WGraph<EdgeWeight> * p_graph, MstW
 				}
 			}
 		} //for
+		delete it;
 	} //while
 	if (result) result = v_count == n_vertices;
 END:

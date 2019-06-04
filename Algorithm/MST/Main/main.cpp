@@ -35,8 +35,9 @@ int main() {
 					if (!visited[adj_v]) {
 						cout << "edge between " << v << " and " << adj_v << " : " << ((WAdjNode<word> *)p_adj_node)->getAdjWeight() << endl;
 						q.push(adj_v);
-					}
+					}				
 				}
+				delete it;
 			}
 			free(visited);
 			delete p_mst_graph;

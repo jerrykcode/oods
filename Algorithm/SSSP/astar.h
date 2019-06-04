@@ -77,6 +77,7 @@ bool Astar<EdgeWeight, DistWeight>::getSingleSourceShortestPath(Graph * p_graph,
 				}
 			} //if
 		} //for
+		delete it;
 	} //while
 	result = collected_[des];
 	if (result) {
