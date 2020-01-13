@@ -1,6 +1,13 @@
 add_executable(
     unit_tests
     testcase.cc
+    graph/graph/test_unw_graph.cc
+    graph/graph/test_w_graph.cc
+    )
+
+include_directories(
+        ../src/graph/graph/
+        ../src/graph/graph/impl
     )
 
 target_link_libraries(
