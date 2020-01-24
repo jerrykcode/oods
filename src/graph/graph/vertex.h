@@ -6,5 +6,7 @@ namespace oods
     {
         /* Vertex type */
         typedef unsigned int Vertex;
+
+        const Vertex NOT_A_VERTEX = 0xffffffff;
     }
 }
