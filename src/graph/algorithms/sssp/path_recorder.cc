@@ -19,8 +19,8 @@ void NoPathRecorder::Add(Vertex from, Vertex to) {
 
 /* Implementation of SinglePathRecorder. */
 
-SinglePathRecorder::SinglePathRecorder() : PathRecorder() {
-    arr_pre_ = new Vertex[num];
+SinglePathRecorder::SinglePathRecorder(size_t vertices_num) : PathRecorder() {
+    arr_pre_ = new Vertex[vertices_num];
 }
 
 SinglePathRecorder::~SinglePathRecorder() {
@@ -54,6 +54,15 @@ void SinglePathRecorder::GetSinglePath(Vertex des, vector<Vertex>& out_path) {
 
 
 /* Implementation of AllPathsRecorder. */
+AllPathsRecorder::AllPathsRecorder(size_t vertices_num) : vertices_num_(vertices_num) {
+    arr_v_pre_ = new vector<Vertex>[vertices_num];
+}
+
+AllPathsRecorder::~AllPathsRecorder() {
+    for (int i = 0; i < vertices_num; i++)
+        vector<Vertex>().swap(arr_v_pre_[i]);
+}
+
 RecorderType AllPathsRecorder::GetRecorderType() {
     return ALL_PATHS_RECORDER;
 }

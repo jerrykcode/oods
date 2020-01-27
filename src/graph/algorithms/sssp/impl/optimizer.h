@@ -13,21 +13,25 @@ namespace oods
             virtual void Initialize(DistWeight * arr_dist, bool * arr_collectedi, size_t num, Vertex src) = 0;
             virtual Vertex GetMinDistVertex() = 0;
             virtual void Update(Vertex v, DistWeight dist) = 0;
+            virtual ~Optimizer() {} //Virtual destructor
         protected:
-            DistWeight * arr_dist_;
-            bool * arr_collected_;
+            DistWeight * arr_dist_; //Reference 
+            bool * arr_collected_; //Reference
             size_t num_;
         };
 
         template<typename DistWeight>
         class NoOptimizer : public Optimizer<DistWeight> {
         public:
+            ~NoOptimizer() {}
         };
 
         template<typename DistWeight>
         class HeapOptimizer : public Optimizer<DistWeight> {
         public:
-
+            ~HeapOptimizer() {
+                
+            }
         private:
             priority_queue<PriorityNode<DistWeight>, vector<PriorityNode<DistWeight>>, cmp<DistWeight>> queue_;
         };
