@@ -7,7 +7,7 @@ namespace oods
     namespace oograph
     {
         template<typename EdgeWeight, DistWeight>
-        class Dijkstra : public Sssp {        
+        class Dijkstra : public Sssp<EdgeWeight, DistWeight> {        
         public:
             Dijkstra(Optimizer * p_optimizer) : p_optimizer_(p_optimizer) {}
             ~Dijkstra() {}
@@ -57,3 +57,6 @@ namespace oods
     }
 
 }
+
+using namespace oods::oograph;
+bool 

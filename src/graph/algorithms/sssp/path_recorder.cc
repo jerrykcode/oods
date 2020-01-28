@@ -17,10 +17,15 @@ void NoPathRecorder::Add(Vertex from, Vertex to) {
     //Do nothing
 }
 
+void NoPathRecorder::Clear() {
+    //Do nothing
+}
+
 /* Implementation of SinglePathRecorder. */
 
-SinglePathRecorder::SinglePathRecorder(size_t vertices_num) : PathRecorder() {
+SinglePathRecorder::SinglePathRecorder(size_t vertices_num) : PathRecorder(), vertices_num_(vertices_num) {
     arr_pre_ = new Vertex[vertices_num];
+    std::fill(arr_pre_, arr_pre_ + vertices_num, NOT_A_VERTEX);
 }
 
 SinglePathRecorder::~SinglePathRecorder() {
@@ -39,13 +44,17 @@ void SinglePathRecorder::Add(Vertex from, Vertex to) {
     //Do nothing
 }
 
-void SinglePathRecorder::GetSinglePath(Vertex des, vector<Vertex>& out_path) {
+void SinglePathRecorder::Clear() {
+    std::fill(arr_pre_, arr_pre_ + vertices_num_, NOT_A_VERTEX)
+}
+
+void SinglePathRecorder::GetSinglePath(Vertex src, Vertex des, vector<Vertex>& out_path) {
     stack<Vertex> s;    
-    while (des != this->src_) {
+    while (des != src) {
         s.push(des);
         des = arr_pre_[des];
     }
-    out_path.push_back(this->src_);
+    out_path.push_back(src);
     while (!s.empty()) {
         out_path.push_bacl(s.top());
         s.pop();
@@ -76,15 +85,20 @@ void AllPathsRecorder::Add(Vertex from, Vertex to) {
     arr_v_pre[to].push_back(from);
 }
 
-void AllPathsRecorder::GetAllPaths(Vertex des, vector<vector<Vertex>>& out_paths) {
+void AllPathsRecorder::Clear() {
+    for (int i = 0; i < vertices_num_; i++)
+        arr_v_pre_[i].clear();
+}
+
+void AllPathsRecorder::GetAllPaths(Vertex src, Vertex des, vector<vector<Vertex>>& out_paths) {
     vector<Vertex> v;
-    Dfs(des, v, out_paths);
+    Dfs(src, des, v, out_paths);
     vector<Vertex>().swap(v);
 }
 
-void AllPathsRecorder::Dfs(Vertex des, vector<Vertex>& v, vector<vector<Vertex>>& out_paths) {
+void AllPathsRecorder::Dfs(Vertex src, Vertex des, vector<Vertex>& v, vector<vector<Vertex>>& out_paths) {
     v.push_back(des);
-    if (des == this->src_) {
+    if (des == src) {
         vector<Vertex> path;
         path.resize(v.size());
         for (int i = 0; i < v.size(); i++)
@@ -93,7 +107,7 @@ void AllPathsRecorder::Dfs(Vertex des, vector<Vertex>& v, vector<vector<Vertex>>
     }
     else {
         for (Vertex pre : arr_v_pre_[des]) {       
-            Dfs(pre, v, out_paths);        
+            Dfs(src, pre, v, out_paths);        
         }
     }
     v.pop_back();
