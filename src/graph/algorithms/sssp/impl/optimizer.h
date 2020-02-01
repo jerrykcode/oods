@@ -1,7 +1,9 @@
 #pragma once
 #include "priority.h"
 #include <queue>
+#include <vector>
 using std::priority_queue;
+using std::vector;
 
 namespace oods
 {
@@ -10,7 +12,7 @@ namespace oods
         template<typename DistWeight>
         class Optimizer {
         public:
-            virtual void Initialize(DistWeight * arr_dist, bool * arr_collectedi, size_t num, Vertex src) = 0;
+            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) = 0;
             virtual Vertex GetMinDistVertex() = 0;
             virtual void Update(Vertex v, DistWeight dist) = 0;
             virtual ~Optimizer() {} //Virtual destructor
@@ -23,14 +25,21 @@ namespace oods
         template<typename DistWeight>
         class NoOptimizer : public Optimizer<DistWeight> {
         public:
+            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src);
+            virtual Vertex GetMinDistVertex();
+            virtual void Update(Vertex v, DistWeight dist);
             ~NoOptimizer() {}
         };
 
         template<typename DistWeight>
         class HeapOptimizer : public Optimizer<DistWeight> {
         public:
+            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src);
+            virtual Vertex GetMinDistVertex();
+            virtual void Update(Vertex v, DistWeight dist);
+
             ~HeapOptimizer() {
-                
+                //priority_queue<PriorityNode<DistWeight>, vector<PriorityNode<DistWeight>>>().swap(queue_);
             }
         private:
             priority_queue<PriorityNode<DistWeight>, vector<PriorityNode<DistWeight>>, cmp<DistWeight>> queue_;
@@ -44,14 +53,14 @@ using namespace oods::oograph;
 
 /* Implementation of NoOptimizer. */
 template<typename DistWeight>
-void NoOptimizer::Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) {
+void NoOptimizer<DistWeight>::Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) {
     this->arr_dist_ = arr_dist;
     this->arr_collected_ = arr_collected;
     this->num_ = num;
 }
 
 template<typename DistWeight>
-Vertex NoOptimizer::GetMinDistVertex() {
+Vertex NoOptimizer<DistWeight>::GetMinDistVertex() {
     Vertex min = NOT_A_VERTEX;
     for (Vertex v = 0; v < this->num_; v++)
         if (!this->arr_collected_[v])
@@ -61,14 +70,14 @@ Vertex NoOptimizer::GetMinDistVertex() {
 }
 
 template<typename DistWeight>
-void NoOptimizer::Update(Vertex v, DistWeight dist) {
+void NoOptimizer<DistWeight>::Update(Vertex v, DistWeight dist) {
     
 }
 
 
 /* Implementation of HeapOptimizer. */
 template<typename DistWeight>
-void HeapOptimizer::Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) {
+void HeapOptimizer<DistWeight>::Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) {
     this->arr_dist_ = arr_dist;
     this->arr_collected_ = arr_collected;
     this->num_ = num;
@@ -76,7 +85,7 @@ void HeapOptimizer::Initialize(DistWeight * arr_dist, bool * arr_collected, size
 }
 
 template<typename DistWeight>
-Vertex HeapOptimizer::GetMinDistVertex() {
+Vertex HeapOptimizer<DistWeight>::GetMinDistVertex() {
     Vertex top = NOT_A_VERTEX;
     while (!queue_.empty()) {
         top = queue_.top().v;
@@ -87,6 +96,6 @@ Vertex HeapOptimizer::GetMinDistVertex() {
 }
 
 template<typename DistWeight>
-void HeapOptimizer::Update(Vertex v, DistWeight dist) {
+void HeapOptimizer<DistWeight>::Update(Vertex v, DistWeight dist) {
     queue_.push(PriorityNode<DistWeight>(v, dist));
 }
