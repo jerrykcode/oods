@@ -12,20 +12,21 @@ namespace oods
         template<typename DistWeight>
         class Optimizer {
         public:
-            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) = 0;
+            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, bool * arr_calculated, size_t num, Vertex src) = 0;
             virtual Vertex GetMinDistVertex() = 0;
             virtual void Update(Vertex v, DistWeight dist) = 0;
             virtual ~Optimizer() {} //Virtual destructor
         protected:
             DistWeight * arr_dist_; //Reference 
             bool * arr_collected_; //Reference
+            bool * arr_calculated_; //Reference
             size_t num_;
         };
 
         template<typename DistWeight>
         class NoOptimizer : public Optimizer<DistWeight> {
         public:
-            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src);
+            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, bool * arr_calculated, size_t num, Vertex src);
             virtual Vertex GetMinDistVertex();
             virtual void Update(Vertex v, DistWeight dist);
             ~NoOptimizer() {}
@@ -34,7 +35,7 @@ namespace oods
         template<typename DistWeight>
         class HeapOptimizer : public Optimizer<DistWeight> {
         public:
-            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src);
+            virtual void Initialize(DistWeight * arr_dist, bool * arr_collected, bool * arr_calculated, size_t num, Vertex src);
             virtual Vertex GetMinDistVertex();
             virtual void Update(Vertex v, DistWeight dist);
 
@@ -53,9 +54,10 @@ using namespace oods::oograph;
 
 /* Implementation of NoOptimizer. */
 template<typename DistWeight>
-void NoOptimizer<DistWeight>::Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) {
+void NoOptimizer<DistWeight>::Initialize(DistWeight * arr_dist, bool * arr_collected, bool * arr_calculated, size_t num, Vertex src) {
     this->arr_dist_ = arr_dist;
     this->arr_collected_ = arr_collected;
+    this->arr_calculated_ = arr_calculated;
     this->num_ = num;
 }
 
@@ -63,7 +65,7 @@ template<typename DistWeight>
 Vertex NoOptimizer<DistWeight>::GetMinDistVertex() {
     Vertex min = NOT_A_VERTEX;
     for (Vertex v = 0; v < this->num_; v++)
-        if (!this->arr_collected_[v])
+        if (!this->arr_collected_[v] && this->arr_calculated_[v])
             if (min == NOT_A_VERTEX || this->arr_dist_[v] < this->arr_dist_[min]) 
                 min = v;
     return min;
@@ -77,9 +79,10 @@ void NoOptimizer<DistWeight>::Update(Vertex v, DistWeight dist) {
 
 /* Implementation of HeapOptimizer. */
 template<typename DistWeight>
-void HeapOptimizer<DistWeight>::Initialize(DistWeight * arr_dist, bool * arr_collected, size_t num, Vertex src) {
+void HeapOptimizer<DistWeight>::Initialize(DistWeight * arr_dist, bool * arr_collected, bool * arr_calculated, size_t num, Vertex src) {
     this->arr_dist_ = arr_dist;
     this->arr_collected_ = arr_collected;
+    this->arr_calculated_ = arr_calculated;
     this->num_ = num;
     queue_.push(PriorityNode<DistWeight>(src, 0));
 }

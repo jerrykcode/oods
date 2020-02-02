@@ -103,7 +103,7 @@ void AllPathsRecorder::Dfs(Vertex src, Vertex des, vector<Vertex>& v, vector<Pat
     v.push_back(des);
     if (des == src) {
         Path * p_path = new Path();        
-        for (auto it = v.begin(); it != v.end(); it++)
+        for (auto it = v.end() - 1; it >= v.begin(); it--) //inverse order
             p_path->AddVertex(*it);
         out_paths.push_back(p_path);
     }

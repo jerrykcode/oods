@@ -84,7 +84,8 @@ bool Dijkstra<EdgeWeight, DistWeight>::_Dijkstra(WGraph<EdgeWeight> * p_graph, V
     bool * calculated = new bool[num_vertices];
     fill(calculated, calculated + num_vertices, false);
     arr_out_dist[src] = 0;
-    p_optimizer_->Initialize(arr_out_dist, collected, num_vertices, src);
+    calculated[src] = true;
+    p_optimizer_->Initialize(arr_out_dist, collected, calculated, num_vertices, src);
     Vertex min_v, adj_v;
     DistWeight tmp_dist; 
     while ((min_v = p_optimizer_->GetMinDistVertex()) != NOT_A_VERTEX) {

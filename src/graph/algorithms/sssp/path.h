@@ -12,6 +12,10 @@ namespace oods
     {
         class Path {
         public:
+            ~Path() {
+                vector<Vertex>().swap(path_);
+            }
+
             void AddVertex(Vertex v) {
                 path_.push_back(v);
             }
