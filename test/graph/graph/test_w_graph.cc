@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "list_w_graph.h"
+#include "matrix_w_graph.h"
 using namespace oods::oograph;
 
 template<typename EdgeWeight>
@@ -94,7 +95,7 @@ void testWGraph(WGraph<EdgeWeight> * p_graph, bool is_directed) {
     }
 }
 
-TEST(Graph, list_w_graph) {
+TEST(WGraph, list_w_graph) {
     Graph * p_graph = new ListWGraph<int>(5, true);
     testWGraph<int>((WGraph<int>*)p_graph, true);
     delete p_graph;
@@ -108,6 +109,24 @@ TEST(Graph, list_w_graph) {
     delete p_graph;
 
     p_graph = new ListWGraph<unsigned char>(5, false);
+    testWGraph<unsigned char>((WGraph<unsigned char>*)p_graph, false);
+    delete p_graph;
+}
+
+TEST(WGraph, matrix_w_graph) {
+    Graph * p_graph = new MatrixWGraph<int>(5, true);
+    testWGraph<int>((WGraph<int>*)p_graph, true);
+    delete p_graph;
+
+    p_graph = new MatrixWGraph<int>(5, false); 
+    testWGraph<int>((WGraph<int>*)p_graph, false);
+    delete p_graph;
+
+    p_graph = new MatrixWGraph<unsigned char>(5, true);
+    testWGraph<unsigned char>((WGraph<unsigned char>*)p_graph, true);
+    delete p_graph;
+
+    p_graph = new MatrixWGraph<unsigned char>(5, false);
     testWGraph<unsigned char>((WGraph<unsigned char>*)p_graph, false);
     delete p_graph;
 }
@@ -197,7 +216,7 @@ void testWGraph2(WGraph<EdgeWeight> * p_graph, bool is_directed) {
 }
 
 
-TEST(Graph, list_w_graph2) {
+TEST(WGraph, list_w_graph2) {
     Graph * p_graph = new ListWGraph<int>(10, true);
     testWGraph2<int>((WGraph<int>*)p_graph, true);
     delete p_graph;
@@ -213,6 +232,22 @@ TEST(Graph, list_w_graph2) {
     p_graph = new ListWGraph<long long>(10, false);
     testWGraph2<long long>((WGraph<long long>*)p_graph, false);
     delete p_graph;
+}
 
+TEST(WGraph, matrix_w_graph2) {
+    Graph * p_graph = new MatrixWGraph<int>(10, true);
+    testWGraph2<int>((WGraph<int>*)p_graph, true);
+    delete p_graph;
 
+    p_graph = new MatrixWGraph<int>(10, false); 
+    testWGraph2<int>((WGraph<int>*)p_graph, false);
+    delete p_graph;
+
+    p_graph = new MatrixWGraph<long long>(10, true);
+    testWGraph2<long long>((WGraph<long long>*)p_graph, true);
+    delete p_graph;
+
+    p_graph = new MatrixWGraph<long long>(10, false);
+    testWGraph2<long long>((WGraph<long long>*)p_graph, false);
+    delete p_graph;
 }

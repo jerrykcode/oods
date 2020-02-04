@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "list_unw_graph.h"
+#include "matrix_unw_graph.h"
 using namespace oods::oograph;
 
 void AddUnwEdge(Graph * p_graph, Vertex v, Vertex w) {
@@ -8,8 +9,8 @@ void AddUnwEdge(Graph * p_graph, Vertex v, Vertex w) {
     delete p_edge;
 }
 
-TEST(Graph, list_unw_graph) {
-    Graph * p_graph = (Graph *)(new ListUnwGraph(7, true));
+//@param p_graph A directed unweighted graph with 7 vertices
+void TestCase(Graph * p_graph) {
     AddUnwEdge(p_graph, 0, 1);
     AddUnwEdge(p_graph, 0, 2);
     AddUnwEdge(p_graph, 0, 3);
@@ -37,5 +38,16 @@ TEST(Graph, list_unw_graph) {
     p_graph->RemoveEdge(0, 1);
     p_graph->RemoveEdge(3, 1);
     EXPECT_EQ(p_graph->GetNumEdges(), 8);
+}
+
+TEST(UnwGraph, ListUnwGraph) {
+    Graph * p_graph = new ListUnwGraph(7, true);
+    TestCase(p_graph);
+    delete p_graph;
+}
+
+TEST(UnwGraph, MatrixUnwGraph) {
+    Graph * p_graph = new MatrixUnwGraph(7, true);
+    TestCase(p_graph);
     delete p_graph;
 }
