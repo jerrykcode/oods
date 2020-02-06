@@ -8,8 +8,9 @@ namespace oods
 
         /* Iterator use to iterate all the adjacent vertices of a vertex. 
          * usage: (to traverse all the adjacent vertices of a vertex v in graph)
+         * p_graph is pointer to a graph, v is a vertex
          *
-         *     Iterator * it = graph.CreateIterator(v); 
+         *     Iterator * it = p_graph->CreateIterator(v); 
          *     while (it->HasNext()) {
          *         it->Next();
          *         Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
@@ -18,7 +19,7 @@ namespace oods
          *
          * or more simple:
          *
-         *     Iterator * it = graph.CreateIterator(v);
+         *     Iterator * it = p_graph->CreateIterator(v);
          *     while (it->Next()) {
          *         Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
          *     }
@@ -38,7 +39,7 @@ namespace oods
          * This is also an abstract class 
          * usage for WIterator<EdgeWeight>
          *
-         *     WIterator<EdgeWeight> * it = (WIterator<EdgeWeight> *)graph.CreateIterator(); //graph is weighted graph
+         *     WIterator<EdgeWeight> * it = (WIterator<EdgeWeight> *)p_graph->CreateIterator(); //p_graph is weighted graph
          *     while (it->HasNext()) {
          *         it->Next();
          *         Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
