@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "dijkstra.h"
+#include "optimized_dijkstra.h"
 #include "list_w_graph.h"
 #include "matrix_w_graph.h"
 #include <algorithm>
@@ -146,69 +147,53 @@ void TestSsspFloatFloat(Sssp<float, float> * p_sssp, WGraph<float>* p_graph) {
 }
 
 TEST(Sssp, dijkstra_with_ListWGraph) {
-    Optimizer<int> * p_optimizer = new HeapOptimizer<int>();
-    Sssp<int, int> * p_sssp = new Dijkstra<int, int>(p_optimizer);
+    Sssp<int, int> * p_sssp = new Dijkstra<int, int>();
     WGraph<int> * p_graph = new ListWGraph<int>(7, true);
     TestSsspIntInt(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
-    p_optimizer = new NoOptimizer<int>();
-    p_sssp = new Dijkstra<int, int>(p_optimizer);
+    p_sssp = new HeapOptimizedDijkstra<int, int>();
     p_graph = new ListWGraph<int>(7, true);
     TestSsspIntInt(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
 }
 
 TEST(Sssp, dijkstra_with_MatrixWGraph) {
-    Optimizer<int> * p_optimizer = new HeapOptimizer<int>();
-    Sssp<int, int> * p_sssp = new Dijkstra<int, int>(p_optimizer);
+    Sssp<int, int> * p_sssp = new Dijkstra<int, int>();
     WGraph<int> * p_graph = new MatrixWGraph<int>(7, true);
     TestSsspIntInt(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
-    p_optimizer = new NoOptimizer<int>();
-    p_sssp = new Dijkstra<int, int>(p_optimizer);
+    p_sssp = new HeapOptimizedDijkstra<int, int>();
     p_graph = new MatrixWGraph<int>(7, true);
     TestSsspIntInt(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
 }
 
 
 TEST(Sssp, dijkstra2_with_ListWGraph) {
-    Optimizer<float> * p_optimizer = new HeapOptimizer<float>();
-    Sssp<float, float> * p_sssp = new Dijkstra<float, float>(p_optimizer);
+    Sssp<float, float> * p_sssp = new Dijkstra<float, float>();
     WGraph<float> * p_graph = new ListWGraph<float>(6, false);
     TestSsspFloatFloat(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
-    p_optimizer = new NoOptimizer<float>();
-    p_sssp = new Dijkstra<float, float>(p_optimizer);
+    p_sssp = new HeapOptimizedDijkstra<float, float>();
     p_graph = new ListWGraph<float>(6, false);
     TestSsspFloatFloat(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
 }
 
 TEST(Sssp, dijkstra2_with_MatrixWGraph) {
-    Optimizer<float> * p_optimizer = new HeapOptimizer<float>();
-    Sssp<float, float> * p_sssp = new Dijkstra<float, float>(p_optimizer);
+    Sssp<float, float> * p_sssp = new Dijkstra<float, float>();
     WGraph<float> * p_graph = new MatrixWGraph<float>(6, false);
     TestSsspFloatFloat(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
-    p_optimizer = new NoOptimizer<float>();
-    p_sssp = new Dijkstra<float, float>(p_optimizer);
+    p_sssp = new HeapOptimizedDijkstra<float, float>();
     p_graph = new MatrixWGraph<float>(6, false);
     TestSsspFloatFloat(p_sssp, p_graph);
-    delete p_optimizer;
     delete p_sssp;
     delete p_graph;
 }
