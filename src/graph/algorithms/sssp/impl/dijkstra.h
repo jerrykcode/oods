@@ -91,7 +91,7 @@ bool Dijkstra<EdgeWeight, DistWeight>::_Dijkstra(WGraph<EdgeWeight> * p_graph, V
     fill(arr_collected_, arr_collected_ + num_vertices, false);
     arr_calculated_ = new bool[num_vertices];
     fill(arr_calculated_, arr_calculated_ + num_vertices, false);
-    arr_dist_[src] = 0;
+    arr_dist_[src] = DistWeight(0);
     arr_calculated_[src] = true;
     Initialize(num_vertices, src);
     Vertex min_v, adj_v;

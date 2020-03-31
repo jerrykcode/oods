@@ -4,6 +4,7 @@
 #include "list_w_graph.h"
 #include "matrix_w_graph.h"
 #include <algorithm>
+#include "testequalpath.h"
 using namespace oods::oograph;
 
 template<typename EdgeWeight>
@@ -11,18 +12,6 @@ void AddWEdge(WGraph<EdgeWeight> * p_graph, Vertex v, Vertex w, EdgeWeight edge_
     Edge * p_edge = new WEdge<EdgeWeight>(v, w, edge_weight);
     p_graph->AddEdge(p_edge);
     delete p_edge;
-}
-
-void TestEqualPath(Path * p_path, std::initializer_list<Vertex> list) {
-    vector<Vertex>& p_ref = p_path->GetPathRef();
-    EXPECT_EQ(p_ref.size(), list.size());
-    auto vi = p_ref.begin();
-    auto li = list.begin();
-    while (vi != p_ref.end()) {
-        EXPECT_EQ(*vi, *li);
-        vi++;
-        li++;
-    }
 }
 
 // @param p_graph A directed weighted graph with 7 vertices
@@ -59,23 +48,6 @@ void TestSsspIntInt(Sssp<int, int> * p_sssp, WGraph<int> * p_graph) {
     delete p_recorder;
 }
 
-bool ComparePath(Path * a, Path * b) {
-    vector<Vertex>& a_ref = a->GetPathRef();
-    vector<Vertex>& b_ref = b->GetPathRef();
-    for (int i = 0; i < std::min(a_ref.size(), b_ref.size()); i++) {
-        if (a_ref[i] < b_ref[i]) return true;
-        if (a_ref[i] > b_ref[i]) return false;
-        //if a_ref[i] == b_ref[i] then continue
-    }
-    return a_ref.size() < b_ref.size();
-}
-
-void DeletePaths(vector<Path *>& paths) {
-    for (auto p_path : paths) {
-        delete p_path;
-    }
-    paths.clear();
-}
 
 void TestSsspFloatFloat(Sssp<float, float> * p_sssp, WGraph<float>* p_graph) {
     AddWEdge<float>(p_graph, 0, 1, 2);

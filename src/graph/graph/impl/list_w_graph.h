@@ -126,7 +126,7 @@ EdgeWeight ListWGraph<EdgeWeight>::GetEdgeWeight(Vertex v, Vertex w) {
             return result;
         }
     }
-    return 0;
+    return EdgeWeight(0);
 }
 
 template<typename EdgeWeight>

@@ -3,7 +3,8 @@ add_executable(
     testcase.cc
     graph/graph/test_unw_graph.cc
     graph/graph/test_w_graph.cc
-    graph/algorithms/sssp/test_sssp.cc    
+    graph/algorithms/sssp/test_sssp.cc
+    graph/algorithms/sssp/test_sssp_1.cc 
     )
 
 include_directories(
@@ -11,6 +12,7 @@ include_directories(
         ../src/graph/graph/impl
         ../src/graph/algorithms/sssp
         ../src/graph/algorithms/sssp/impl
+        include
     )
 
 target_link_libraries(
