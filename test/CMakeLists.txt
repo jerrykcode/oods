@@ -4,7 +4,8 @@ add_executable(
     graph/graph/test_unw_graph.cc
     graph/graph/test_w_graph.cc
     graph/algorithms/sssp/test_sssp.cc
-    graph/algorithms/sssp/test_sssp_1.cc 
+    graph/algorithms/sssp/test_sssp_1.cc
+    graph/algorithms/sssp/test_sssp_2.cc
     )
 
 include_directories(

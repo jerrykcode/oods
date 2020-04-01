@@ -5,14 +5,8 @@
 #include "matrix_w_graph.h"
 #include <algorithm>
 #include "testequalpath.h"
+#include "addedge.h"
 using namespace oods::oograph;
-
-template<typename EdgeWeight>
-void AddWEdge(WGraph<EdgeWeight> * p_graph, Vertex v, Vertex w, EdgeWeight edge_weight) {
-    Edge * p_edge = new WEdge<EdgeWeight>(v, w, edge_weight);
-    p_graph->AddEdge(p_edge);
-    delete p_edge;
-}
 
 // @param p_graph A directed weighted graph with 7 vertices
 void TestSsspIntInt(Sssp<int, int> * p_sssp, WGraph<int> * p_graph) {

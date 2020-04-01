@@ -4,11 +4,13 @@
 #include "list_w_graph.h"
 #include "matrix_w_graph.h"
 #include "testequalpath.h"
+#include "test.h"
 
 //Edge weight
 struct EW {
     short cost;
     short time;
+    EW() {}
     EW(short s) : cost(s), time(s) { }
     EW(short cost, short time) : cost(cost), time(time) {}
     bool operator <(const short s);
@@ -109,7 +111,7 @@ void AddWEdge(WGraph<EW> * p_graph, Vertex v, Vertex w, short cost, short time) 
 }
 
 // p_graph 
-void TestSssp(Sssp<struct EW, struct DW> * p_sssp, WGraph<struct EW>* p_graph) {
+void TestSsspMultipleWeight(Sssp<struct EW, struct DW> * p_sssp, WGraph<struct EW>* p_graph) {
     AddWEdge(p_graph, 0, 1, 1, 5);
     AddWEdge(p_graph, 0, 2, 10, 6);
     AddWEdge(p_graph, 0, 4, 3, 6);
@@ -182,11 +184,5 @@ void TestSssp(Sssp<struct EW, struct DW> * p_sssp, WGraph<struct EW>* p_graph) {
 }
 
 TEST(Sssp, dijkstra_multiple_edgeweight) {
-    Sssp<struct EW, struct DW> * p_sssp = new HeapOptimizedDijkstra<struct EW, struct DW>();
-    WGraph<struct EW> * p_graph = new ListWGraph<struct EW>(5, false);
-    TestSssp(p_sssp, p_graph);
-    delete p_sssp;
-    delete p_graph;
+    TestSssp<struct EW, struct DW>(5, TestSsspMultipleWeight);
 }
-
-
