@@ -111,7 +111,10 @@ void AddWEdge(WGraph<EW> * p_graph, Vertex v, Vertex w, short cost, short time) 
 }
 
 // p_graph 
-void TestSsspMultipleWeight(Sssp<struct EW, struct DW> * p_sssp, WGraph<struct EW>* p_graph) {
+void TestSsspMultipleWeight(Sssp<struct EW, struct DW> * p_sssp, WGraphCreator<struct EW>* p_graph_creator) {
+
+    WGraph<struct EW> * p_graph = p_graph_creator->CreateWGraph(5, false);
+
     AddWEdge(p_graph, 0, 1, 1, 5);
     AddWEdge(p_graph, 0, 2, 10, 6);
     AddWEdge(p_graph, 0, 4, 3, 6);
@@ -181,8 +184,9 @@ void TestSsspMultipleWeight(Sssp<struct EW, struct DW> * p_sssp, WGraph<struct E
 
     delete _p_compare_;
     delete p_recorder;
+    delete p_graph;
 }
 
 TEST(Sssp, dijkstra_multiple_edgeweight) {
-    TestSssp<struct EW, struct DW>(5, TestSsspMultipleWeight);
+    TestSssp<struct EW, struct DW>(TestSsspMultipleWeight);
 }

@@ -9,7 +9,10 @@
 #include <vector>
 using std::vector;
 
-void TestSsspWithNegativeEdgeWeight(Sssp<int, int> * p_sssp, WGraph<int> * p_graph) {
+void TestSsspWithNegativeEdgeWeight(Sssp<int, int> * p_sssp, WGraphCreator<int> * p_graph_creator) {
+
+    WGraph<int> * p_graph = p_graph_creator->CreateWGraph(3, false);
+
     AddWEdge<int>(p_graph, 0, 1, 1);
     AddWEdge<int>(p_graph, 1, 2, 2);
     AddWEdge<int>(p_graph, 0, 2, -1);
@@ -22,8 +25,9 @@ void TestSsspWithNegativeEdgeWeight(Sssp<int, int> * p_sssp, WGraph<int> * p_gra
     ASSERT_FALSE(result);
 
     delete p_recorder;
+    delete p_graph;
 }
 
 TEST(Sssp, dijkstra_illegal_negative_edge_weight) {
-    TestSssp<int, int>(3, TestSsspWithNegativeEdgeWeight);
+    TestSssp<int, int>(TestSsspWithNegativeEdgeWeight);
 }
