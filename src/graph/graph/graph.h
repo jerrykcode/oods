@@ -25,11 +25,13 @@ namespace oods
             //Add an edge.
             void AddEdge(Edge * p_edge) {
                p_direction_->AddEdge(this, p_edge);
+               num_edges_++;
             }
 
             //Remove an edge
             void RemoveEdge(Vertex v, Vertex w) {
                 p_direction_->RemoveEdge(this, v, w);
+                num_edges_--;
             }
 
             //Get the inverse of this graph.
@@ -72,6 +74,9 @@ namespace oods
             virtual bool HasEdge(Vertex v, Vertex w) = 0;
             virtual void DoAddEdge(Edge * p_edge) = 0;
             virtual void DoRemoveEdge(Vertex v, Vertex w) = 0;
+            
+            virtual void RemoveAllEdges() = 0;
+
             virtual Graph * DoInverseGraph() = 0;
            
             /* Add a new vertex into the graph. Original vertices are numbered from 0 to num_vertices_ - 1 and the new one is numbered num_vertice_. */ 

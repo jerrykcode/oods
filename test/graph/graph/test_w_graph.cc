@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
-#include "list_w_graph.h"
-#include "matrix_w_graph.h"
+#include "test.h"
 using namespace oods::oograph;
 
 template<typename EdgeWeight>
@@ -40,9 +39,9 @@ void testWGraph(WGraph<EdgeWeight> * p_graph, bool is_directed) {
     EXPECT_EQ(p_graph->GetEdgeWeight(3, 4), 6);
     EXPECT_EQ(p_graph->GetEdgeWeight(2, 4), 5);    
     
+    EXPECT_EQ(p_graph->GetNumEdges(), 6);
     if (is_directed) {
         ASSERT_TRUE(p_graph->IsDirected());
-        EXPECT_EQ(p_graph->GetNumEdges(), 6);
     }
     else {
         ASSERT_FALSE(p_graph->IsDirected());
@@ -55,7 +54,6 @@ void testWGraph(WGraph<EdgeWeight> * p_graph, bool is_directed) {
         ASSERT_TRUE(p_graph->HasEdge(4, 2));
 
 
-        EXPECT_EQ(p_graph->GetNumEdges(), 12);
         EXPECT_EQ(p_graph->GetEdgeWeight(1, 0), 2);
         EXPECT_EQ(p_graph->GetEdgeWeight(3, 0), 3);
         EXPECT_EQ(p_graph->GetEdgeWeight(4, 1), 1);
@@ -74,12 +72,7 @@ void testWGraph(WGraph<EdgeWeight> * p_graph, bool is_directed) {
     AddWEdge<int>(p_graph, 2, 5, 3);
     EXPECT_EQ(p_graph->GetEdgeWeight(2, 5), 3);
     
-    if (is_directed) {
-        EXPECT_EQ(p_graph->GetNumEdges(), 7);
-    }
-    else {
-        EXPECT_EQ(p_graph->GetNumEdges(), 14);
-    }
+    EXPECT_EQ(p_graph->GetNumEdges(), 7);
 
     p_graph->RemoveEdge(3, 2);
     ASSERT_FALSE(p_graph->HasEdge(3, 2));
@@ -87,12 +80,7 @@ void testWGraph(WGraph<EdgeWeight> * p_graph, bool is_directed) {
         ASSERT_FALSE(p_graph->HasEdge(2, 3));
     }
 
-    if (is_directed) {
-        EXPECT_EQ(p_graph->GetNumEdges(), 6);
-    }
-    else {
-        EXPECT_EQ(p_graph->GetNumEdges(), 12);
-    }
+    EXPECT_EQ(p_graph->GetNumEdges(), 6);
 }
 
 TEST(WGraph, list_w_graph) {
@@ -182,10 +170,9 @@ void testWGraph2(WGraph<EdgeWeight> * p_graph, bool is_directed) {
     EXPECT_EQ(p_graph->GetEdgeWeight(1, 9), 0);
     EXPECT_EQ(p_graph->GetEdgeWeight(8, 4), 2000);
 
+    EXPECT_EQ(p_graph->GetNumEdges(), 21);
     if (is_directed) {
         ASSERT_TRUE(p_graph->IsDirected());
-        
-        EXPECT_EQ(p_graph->GetNumEdges(), 21);
     }
     else {
         ASSERT_FALSE(p_graph->IsDirected());
@@ -211,7 +198,6 @@ void testWGraph2(WGraph<EdgeWeight> * p_graph, bool is_directed) {
         EXPECT_EQ(p_graph->GetEdgeWeight(9, 1), 0);
         EXPECT_EQ(p_graph->GetEdgeWeight(4, 8), 2000);
 
-        EXPECT_EQ(p_graph->GetNumEdges(), 42);
     }
 }
 
@@ -250,4 +236,59 @@ TEST(WGraph, matrix_w_graph2) {
     p_graph = new MatrixWGraph<long long>(10, false);
     testWGraph2<long long>((WGraph<long long>*)p_graph, false);
     delete p_graph;
+}
+
+
+
+
+//use "test.h"
+void TestWGraphRemoveAllEdges(WGraphCreator<int> *p_wgraph_creator) {
+    WGraph<int> *p_graph = p_wgraph_creator->CreateWGraph(10, true);
+    AddWEdge<int>(p_graph, 1, 2, 3);
+    AddWEdge<int>(p_graph, 1, 6, 70);
+    AddWEdge<int>(p_graph, 1, 8, 24);
+    AddWEdge<int>(p_graph, 2, 3, 78);
+    AddWEdge<int>(p_graph, 2, 4, -9);
+    AddWEdge<int>(p_graph, 3, 1, 23);
+    AddWEdge<int>(p_graph, 3, 6, -11);
+    AddWEdge<int>(p_graph, 4, 1, 100000);
+    AddWEdge<int>(p_graph, 0, 9, 0x7fffffff);
+    AddWEdge<int>(p_graph, 0, 2, -768);
+    AddWEdge<int>(p_graph, 6, 5, 98);
+    AddWEdge<int>(p_graph, 6, 7, -11111111);
+    AddWEdge<int>(p_graph, 7, 4, 20);
+    AddWEdge<int>(p_graph, 8, 9, 89);
+    AddWEdge<int>(p_graph, 9, 6, -90);
+    AddWEdge<int>(p_graph, 5, 8, 1);
+    AddWEdge<int>(p_graph, 7, 2, 0);
+    AddWEdge<int>(p_graph, 3, 9, 0);
+    AddWEdge<int>(p_graph, 1, 9, 0);
+    AddWEdge<int>(p_graph, 8, 4, 2000);
+    
+    EXPECT_EQ(p_graph->GetNumEdges(), 20);
+    p_graph->RemoveAllEdges();
+    EXPECT_EQ(p_graph->GetNumEdges(), 0);
+    
+    AddWEdge<int>(p_graph, 1, 2, 3);
+    AddWEdge<int>(p_graph, 1, 7, 710);
+    AddWEdge<int>(p_graph, 1, 8, 0241);
+    AddWEdge<int>(p_graph, 2, 6, 8);
+    AddWEdge<int>(p_graph, 3, 1, -23);
+    AddWEdge<int>(p_graph, 3, 4, -11);
+    AddWEdge<int>(p_graph, 4, 1, -100000);
+    AddWEdge<int>(p_graph, 0, 9, 0x7fffffff);
+    AddWEdge<int>(p_graph, 0, 2, -768);
+    AddWEdge<int>(p_graph, 6, 7, -11111111);
+    AddWEdge<int>(p_graph, 7, 4, 0x20);
+    AddWEdge<int>(p_graph, 9, 6, -90);
+    AddWEdge<int>(p_graph, 5, 8, 1);
+    AddWEdge<int>(p_graph, 3, 9, 0);
+    AddWEdge<int>(p_graph, 8, 4, 2000);
+
+   EXPECT_EQ(p_graph->GetNumEdges(), 15); 
+   p_wgraph_creator->DeleteWGraph(p_graph);
+}
+
+TEST(WGraph, RemoveAllEdges) {
+    TestWGraph<int>(TestWGraphRemoveAllEdges);
 }

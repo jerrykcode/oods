@@ -25,7 +25,8 @@ void TestSsspWithNegativeEdgeWeight(Sssp<int, int> * p_sssp, WGraphCreator<int> 
     ASSERT_FALSE(result);
 
     delete p_recorder;
-    delete p_graph;
+    
+    p_graph_creator->DeleteWGraph(p_graph);
 }
 
 TEST(Sssp, dijkstra_illegal_negative_edge_weight) {

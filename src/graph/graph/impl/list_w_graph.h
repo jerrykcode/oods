@@ -30,6 +30,7 @@ namespace oods
             virtual bool HasEdge(Vertex v, Vertex w);
             virtual void DoAddEdge(Edge * p_edge);
             virtual void DoRemoveEdge(Vertex v, Vertex w);
+            virtual void RemoveAllEdges();
             virtual Graph * DoInverseGraph();
             virtual void AddVertex();
             virtual Iterator * CreateIterator(Vertex v);
@@ -70,7 +71,6 @@ void ListWGraph<EdgeWeight>::DoAddEdge(Edge * p_edge) {
     p_edge->GetVertices(&v, &w);
     if (v < this->num_vertices_ && w < this->num_vertices_) {
         vvlist_[v].push_back(AdjNode<EdgeWeight>(w, ((WEdge<EdgeWeight> *)(p_edge))->GetWeight()));
-        this->num_edges_++;
     } 
 }
 
@@ -80,10 +80,18 @@ void ListWGraph<EdgeWeight>::DoRemoveEdge(Vertex v, Vertex w) {
     while (it->Next()) {
         if (it->GetCurrentVertex() == w) {
             it->RemoveCurrentElement();
-            this->num_edges_--;
             break;
         }
     }
+}
+
+template<typename EdgeWeight>
+void ListWGraph<EdgeWeight>::RemoveAllEdges() {
+    if (this->num_edges_ == 0) return;
+    for (vector<AdjNode<EdgeWeight>> vlist : vvlist_) {
+        vlist.clear();
+    }
+    this->num_edges_ = 0;
 }
 
 template<typename EdgeWeight>

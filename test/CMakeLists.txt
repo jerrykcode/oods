@@ -6,6 +6,7 @@ add_executable(
     graph/algorithms/sssp/test_sssp.cc
     graph/algorithms/sssp/test_sssp_1.cc
     graph/algorithms/sssp/test_sssp_2.cc
+    graph/algorithms/mst/test_mst.cc
     )
 
 include_directories(
@@ -13,6 +14,8 @@ include_directories(
         ../src/graph/graph/impl
         ../src/graph/algorithms/sssp
         ../src/graph/algorithms/sssp/impl
+        ../src/graph/algorithms/mst
+        ../src/graph/algorithms/mst/impl
         include
     )
 

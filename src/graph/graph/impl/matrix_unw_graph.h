@@ -37,15 +37,21 @@ namespace oods
                 p_edge->GetVertices(&v, &w);
                 if (v < this->num_vertices_ && w < this->num_vertices_) {
                     vvmatrix_[v][w] = true;
-                    this->num_edges_++;
                 }
             }
 
             virtual void DoRemoveEdge(Vertex v, Vertex w) {
                 if (v < this->num_vertices_ && w < this->num_vertices_) {
                     vvmatrix_[v][w] = false;
-                    this->num_edges_--;
                 }
+            }
+
+            virtual void RemoveAllEdges() {
+                if (this->num_edges_ == 0) return;
+                for (vector<bool> vmatrix : vvmatrix_) {
+                    std::fill(vmatrix.begin(), vmatrix.end(), false);
+                }
+                this->num_edges_ = 0;
             }
 
             virtual Graph * DoInverseGraph() {

@@ -37,7 +37,6 @@ namespace oods
                 if (v < this->num_vertices_ && w < this->num_vertices_) {
                     p_edge->GetVertices(&v, &w);
                     vvlist_[v].push_back(w);
-                    this->num_edges_++;
                 }
             }
 
@@ -46,10 +45,17 @@ namespace oods
                 while (it->Next()) {
                     if (it->GetCurrentVertex() == w) {
                         it->RemoveCurrentElement();
-                        this->num_edges_--;
                         break;
                     }
                 }
+            }
+
+            virtual void RemoveAllEdges() {
+                if (this->num_edges_ == 0) return;
+                for (vector<Vertex> vlist : vvlist_) {
+                    vlist.clear();
+                }
+                this->num_edges_ = 0;
             }
 
             virtual Graph * DoInverseGraph() {

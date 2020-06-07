@@ -184,7 +184,7 @@ void TestSsspMultipleWeight(Sssp<struct EW, struct DW> * p_sssp, WGraphCreator<s
 
     delete _p_compare_;
     delete p_recorder;
-    delete p_graph;
+    p_graph_creator->DeleteWGraph(p_graph);
 }
 
 TEST(Sssp, dijkstra_multiple_edgeweight) {

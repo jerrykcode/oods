@@ -28,6 +28,7 @@ namespace oods
             virtual bool HasEdge(Vertex v, Vertex w);
             virtual void DoAddEdge(Edge * p_edge);
             virtual void DoRemoveEdge(Vertex v, Vertex w);
+            virtual void RemoveAllEdges();
             virtual Graph * DoInverseGraph();
             virtual void AddVertex();
             virtual Iterator * CreateIterator(Vertex v);
@@ -59,7 +60,6 @@ void MatrixWGraph<EdgeWeight>::DoAddEdge(Edge * p_edge) {
     if (v < this->num_vertices_ && w < this->num_vertices_) {
         vvmatrix_[v][w].has_edge = true;
         vvmatrix_[v][w].edge_weight = ((WEdge<EdgeWeight> *)p_edge)->GetWeight();
-        this->num_edges_++;
     }
 }
 
@@ -67,8 +67,17 @@ template<typename EdgeWeight>
 void MatrixWGraph<EdgeWeight>::DoRemoveEdge(Vertex v, Vertex w) {
     if (v < this->num_vertices_ && w < this->num_vertices_) {
         vvmatrix_[v][w].has_edge = false;
-        this->num_edges_--;
     }
+}
+
+template<typename EdgeWeight>
+void MatrixWGraph<EdgeWeight>::RemoveAllEdges() {
+    if (this->num_edges_ == 0) return;
+    for (Vertex v = 0; v < this->num_vertices_; v++)
+        for (Vertex w = 0; w < this->num_vertices_; w++) {
+            vvmatrix_[v][w].has_edge = false;
+        }
+    this->num_edges_ = 0;
 }
 
 template<typename EdgeWeight>
