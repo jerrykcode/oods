@@ -84,6 +84,9 @@ namespace oods
             
             virtual bool IsWeighted() = 0; //Returned true of the graph is weighted.
             virtual Iterator * CreateIterator(Vertex v) = 0; //Create an iterator for adjacent nodes of a vertex.
+            void CloseIterator(Iterator *it) {
+                delete it;
+            }
             virtual Graph * DeepCopyGraph() = 0; //Return the deep copy of the graph.
           
             Graph(size_t num_vertices, bool is_directed) : num_vertices_(num_vertices), num_edges_(0) {

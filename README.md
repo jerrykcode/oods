@@ -48,6 +48,7 @@ while (it->HasNext()) {
     it->Next();
     Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
 }
+p_graph->CloseIterator(it);
 ```
 `对于Graph的任何实现子类, 均可使用以上代码遍历一个顶点的邻接点`. 事实上, MatrixWIterator\<EdgeWeight\>和ListWIterator\<EdgeWeight\>没有直接继承Iterator类, 而是继承了WIterator\<EdgeWeight\>类(WIterator\<EdgeWeight\>继承了Iterator). WIterator\<EdgeWeight\>是有权图的迭代器, 可以得到顶点与邻接点之间的边权, 
 ```cpp
@@ -57,8 +58,9 @@ while (it->HasNext()) {
     Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
     EdgeWeight weight = it->GetCurrentWeight(); //the weight of edge between v and w
 }
+p_graph->CloseIterator(it);
 ```
-`对于WGraph\<EdgeWeight\>的实现子类, 可使用以上代码遍历一个顶点的邻接点, 及其与邻接点之间的边权`.
+`对于WGraph<EdgeWeight>的实现子类, 可使用以上代码遍历一个顶点的邻接点, 及其与邻接点之间的边权`.
 
 ### 有向图与无向图
 在Graph的所有子类的构造函数中, 均有一个bool变量用于指定图有向或是无向.
@@ -89,3 +91,7 @@ Direction的另一个子类UnDirectedType用于处理`无向图`的情况, 它�
 #### sssp Single Source Shortest Path 单源最短路径
 
 * Djkstra
+
+#### mst Minimum Spanning Tree 最小生成树
+
+* Prim

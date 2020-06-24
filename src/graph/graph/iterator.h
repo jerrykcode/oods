@@ -15,15 +15,16 @@ namespace oods
          *         it->Next();
          *         Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
          *     }
-         *     delete it;
-         *
+         *     p_graph->CloseIterator(it);
+         *     
          * or more simple:
          *
          *     Iterator * it = p_graph->CreateIterator(v);
          *     while (it->Next()) {
          *         Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
          *     }
-         *     delete it;
+         *     p_graph->CloseIterator(it);
+         *     
          *
          * Iterator is an abstract class. */
         class Iterator {
@@ -45,8 +46,8 @@ namespace oods
          *         Vertex w = it->GetCurrentVertex(); //w is an adjacent vertex of v
          *         EdgeWight weight = it->GetCurrentWeight(); //the weight of edge between v and w
          *         it->SetCurrentWeight(0); //You can set the weight of edge between v and w to any value;
-         *     } 
-         *     delete it;
+         *     }
+         *     p_graph->CloseIterator(it); 
          *
          */
 

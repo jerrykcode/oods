@@ -123,6 +123,7 @@ bool Dijkstra<EdgeWeight, DistWeight>::_Dijkstra(WGraph<EdgeWeight> * p_graph, V
                 }
             }
         }
+        p_graph->CloseIterator(it);
     }
     free(arr_collected_);
     free(arr_calculated_);

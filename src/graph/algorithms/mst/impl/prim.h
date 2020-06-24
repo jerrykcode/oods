@@ -141,7 +141,7 @@ bool Prim<EdgeWeight, MstWeight>::PrimTemplate(WGraph<EdgeWeight> *p_graph, MstR
         arr_calculated_[adj_v] = true;
         p_recorder->UpdatePre(adj_v, start);
     }
-    delete it;
+    p_graph->CloseIterator(it);
     
     Vertex min_dist_v;
     while ((min_dist_v = GetMinDistVertex()) != NOT_A_VERTEX) {
@@ -158,7 +158,7 @@ bool Prim<EdgeWeight, MstWeight>::PrimTemplate(WGraph<EdgeWeight> *p_graph, MstR
                 p_recorder->UpdatePre(adj_v, min_dist_v);
             }
         }
-        delete it;
+        p_graph->CloseIterator(it);
     }
     delete arr_dist_;
     delete arr_calculated_;
