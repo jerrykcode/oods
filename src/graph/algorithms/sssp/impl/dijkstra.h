@@ -74,7 +74,7 @@ bool Dijkstra<EdgeWeight, DistWeight>::SingleSourceShortestPath(WGraph<EdgeWeigh
     arr_dist_ = new DistWeight[p_graph->GetNumVertices()];
     bool result = _Dijkstra(p_graph, src, des, p_out_recorder);
     if (result) *p_out_dist = arr_dist_[des];
-    free(arr_dist_);
+    delete arr_dist_;
     return result;
 }
 
@@ -125,8 +125,8 @@ bool Dijkstra<EdgeWeight, DistWeight>::_Dijkstra(WGraph<EdgeWeight> * p_graph, V
         }
         p_graph->CloseIterator(it);
     }
-    free(arr_collected_);
-    free(arr_calculated_);
+    delete arr_collected_;
+    delete arr_calculated_;
     Clear();
     return true;
 }
