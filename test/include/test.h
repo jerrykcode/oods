@@ -5,6 +5,7 @@
 #include "optimized_dijkstra.h"
 #include "prim.h"
 #include "optimized_prim.h"
+#include "tarjan.h"
 #include <vector>
 using namespace oods::oograph;
 using std::vector;
@@ -94,4 +95,18 @@ static void TestMst(void (*TestFunction)(Mst<EdgeWeight, MstWeight>*, WGraphCrea
     for (WGraphCreator<EdgeWeight>* p_wgraph_creator: v_p_wgraph_creator)
         delete p_wgraph_creator;
     v_p_wgraph_creator.clear();
+}
+
+//test scc
+static void TestScc(void (*TestFunction)(Scc*, UnwGraphCreator*)) {
+    vector<UnwGraphCreator*> v_p_creator;
+    InitUnwGraphCreator(v_p_creator);
+    Scc *p_scc = new Tarjan();
+    for (UnwGraphCreator *p_creator : v_p_creator) {
+        TestFunction(p_scc, p_creator);
+    }
+    for (UnwGraphCreator *p_creator : v_p_creator) 
+        delete p_creator;
+    v_p_creator.clear();
+    delete p_scc;
 }

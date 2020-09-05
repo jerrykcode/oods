@@ -7,3 +7,9 @@ static void AddWEdge(WGraph<EdgeWeight> * p_graph, Vertex v, Vertex w, EdgeWeigh
     p_graph->AddEdge(p_edge);
     delete p_edge;
 }
+
+static void AddUnwEdge(Graph * p_graph, Vertex v, Vertex w) {
+    Edge * p_edge = new UnwEdge(v, w);
+    p_graph->AddEdge(p_edge);
+    delete p_edge;
+}

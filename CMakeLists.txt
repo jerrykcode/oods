@@ -16,6 +16,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES GNU)
 endif()
 
 add_subdirectory(src/graph/algorithms/sssp)
+add_subdirectory(src/graph/algorithms/scc)
 
 include(cmake/googletest.cmake)
 fetch_googletest(

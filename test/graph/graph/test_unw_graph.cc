@@ -1,12 +1,8 @@
 #include "gtest/gtest.h"
 #include "test.h"
+#include "addedge.h"
 using namespace oods::oograph;
 
-void AddUnwEdge(Graph * p_graph, Vertex v, Vertex w) {
-    Edge * p_edge = new UnwEdge(v, w);
-    p_graph->AddEdge(p_edge);
-    delete p_edge;
-}
 
 //@param p_graph A directed unweighted graph with 7 vertices
 void TestCase(Graph * p_graph) {
