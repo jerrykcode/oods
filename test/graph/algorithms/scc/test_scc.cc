@@ -1,17 +1,19 @@
 #include "gtest/gtest.h"
+#include <stdarg.h>
 #include "test.h"
 #include "addedge.h"
 
 bool AllEqual(int num, ...) {
     //Returns ture if all the numbers are equal to each other
-    int *p = &num;
-    p++;
-    
-    int first = *p;
-    for (int i = 1; i < num; i++) {
-        p++;
-        if (*p != first) return false;
-    }
+    va_list ap;
+    va_start(ap, num);
+
+    int first = va_arg(ap, int);
+    for (int i = 1; i < num; i++)
+        if (va_arg(ap, int) != first)
+            return false;
+    va_end(ap);
+
     return true;
 }
 
