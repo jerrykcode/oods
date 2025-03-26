@@ -1,6 +1,6 @@
 #pragma once
 #include "../graph.h"
-#include "list_unw_iterator.h"
+#include "front_list_unw_iterator.h"
 #include <vector>
 using std::vector;
 
@@ -16,7 +16,7 @@ namespace oods
                 deleted_ = 0;
             }
 
-            ~ListUnwGraph() {
+            ~FrontListUnwGraph() {
                vector<int>().swap(head_);
                vector<int>().swap(next_);
                vector<int>().swap(to_);
@@ -80,7 +80,7 @@ namespace oods
 
             virtual Iterator * CreateIterator(Vertex v) {
                 if (v < num_vertices_) {
-                    return (Iterator *)(new FrontListUnwIterator(v, head_, next_, to_)); //vvlist_[v] is a vector
+                    return (Iterator *)(new FrontListUnwIterator(v, this));
                 }
                 else return NULL;
             }
