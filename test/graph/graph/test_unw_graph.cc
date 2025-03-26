@@ -35,6 +35,12 @@ void TestCase(Graph * p_graph) {
     EXPECT_EQ(p_graph->GetNumEdges(), 8);
 }
 
+TEST(UnwGraph, FrontListUnwGraph) {
+    Graph * p_graph = new FrontListUnwGraph(7, true);
+    TestCase(p_graph);
+    delete p_graph;
+}
+
 TEST(UnwGraph, ListUnwGraph) {
     Graph * p_graph = new ListUnwGraph(7, true);
     TestCase(p_graph);

@@ -13,6 +13,7 @@ using std::vector;
 static void InitUnwGraphCreator(vector<UnwGraphCreator*>& v_p_unwgraph_creator) {
     v_p_unwgraph_creator.push_back(new MatrixUnwGraphCreator());
     v_p_unwgraph_creator.push_back(new ListUnwGraphCreator());
+    v_p_unwgraph_creator.push_back(new FrontListUnwGraphCreator());
 }
 
 template<typename EdgeWeight, typename DistWeight>

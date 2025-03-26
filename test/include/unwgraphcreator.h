@@ -1,5 +1,6 @@
 #pragma once
 #include "list_unw_graph.h"
+#include "front_list_unw_graph.h"
 #include "matrix_unw_graph.h"
 using namespace oods::oograph;
 
@@ -28,3 +29,14 @@ public:
         delete p_graph;
     }
 };
+
+class FrontListUnwGraphCreator : public UnwGraphCreator {
+    public:
+        virtual UnwGraph * CreateUnwGraph(size_t num_vertices, bool is_directed) {
+            return (UnwGraph *)(new FrontListUnwGraph(num_vertices, is_directed));
+        }
+        virtual void DeleteUnwGraph(UnwGraph *p_graph) {
+            delete p_graph;
+        }
+    };
+    
