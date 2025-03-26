@@ -80,7 +80,7 @@ namespace oods
 
             virtual Iterator * CreateIterator(Vertex v) {
                 if (v < num_vertices_) {
-                    return (Iterator *)(new FrontListUnwIterator(v, this));
+                    return (Iterator *)(new FrontListUnwIterator(v, head_, next_, to_));
                 }
                 else return NULL;
             }
